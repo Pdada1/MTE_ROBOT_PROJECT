@@ -8,15 +8,26 @@ array handrailAlgo(array mazeMap)
 	bool solved = False;
 
 	//search mazeMap for start and end points
+	char facing = N;
+	array directions = [N, S];
 
 	//pick a start and end (doesnt matter tbh)
-	while (!solved)
+	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
 
+		//add current position to array of solution points (append?)
+
+		//if left cell, turn left and step forward
+		//else if forward cell, step forward
+		//else if right cell, turn right and step forward
+		//else, turn around
+
+		//update current position after each move (in the move functions)
+
 	}
-	//Check if solved
 
 	simpleSolArray = simplify(solArray);
+	//this function will look through solArray, and cut sequences where the robot ends up back at the same point
 
 	return simpleSolArray;
 }
