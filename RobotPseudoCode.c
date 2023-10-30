@@ -1,11 +1,12 @@
 /*
+X-axis is motorA, Y-axis is motorD
+
 array handrailAlgo(array mazeMap)
 {
 	//Define solution array as an array of points in reference frame of maze cells (ex. 1-20 for a 20 cell maze)
 	//Solution will be realized by sequence of movements from point to point
 	//Solve Maze while recording movements
 	int currentCellX = 0, currentCellY = 0, goalCellX = 0, goalCellY = 0;
-	bool solved = False;
 
 	//search mazeMap for start and end points
 	int facing = 1;
@@ -30,6 +31,16 @@ array handrailAlgo(array mazeMap)
 	//this function will look through solArray, and cut sequences where the robot ends up back at the same point
 
 	return simpleSolArray;
+
+	or alternately copy the map array and modify?
+}
+
+
+void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCellY)
+{
+	int iEncodeX = nmotorEncoder[motorA]
+	int iEncodeY = nmotorEncoder[motorA]
+	int dEncodeX = (goalCellX - currentCellX) * 1 //this needs to be a constant
 }
 */
 
