@@ -8,8 +8,8 @@ array handrailAlgo(array mazeMap)
 	bool solved = False;
 
 	//search mazeMap for start and end points
-	char facing = N;
-	array directions = [N, S];
+	int facing = 1;
+	array directions[4] = [N, E, S, W];
 
 	//pick a start and end (doesnt matter tbh)
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
@@ -17,10 +17,10 @@ array handrailAlgo(array mazeMap)
 
 		//add current position to array of solution points (append?)
 
-		//if left cell, turn left and step forward
+		//if left cell, turn left and step forward (facing = (facing - 1) % 4, where direction is directions[facing])
 		//else if forward cell, step forward
-		//else if right cell, turn right and step forward
-		//else, turn around
+		//else if right cell, turn right and step forward (facing = (facing + 1) % 4)
+		//else, turn around (facing = (facing + 2) % 4)
 
 		//update current position after each move (in the move functions)
 
@@ -40,5 +40,7 @@ Outputs: 3x motor (x-axis, z-axis, pen)
 */
 task main()
 {
+/*
 
+*/
 }
