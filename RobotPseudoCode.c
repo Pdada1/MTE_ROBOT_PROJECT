@@ -1,5 +1,6 @@
+
 /*
-X-axis is motorA, Y-axis is motorD
+X-axis is motorA + motorB, Y-axis is motorC
 
 array handrailAlgo(array mazeMap)
 {
@@ -9,8 +10,9 @@ array handrailAlgo(array mazeMap)
 	int currentCellX = 0, currentCellY = 0, goalCellX = 0, goalCellY = 0;
 
 	//search mazeMap for start and end points
-	int facing = 1;
-	array directions[4] = [N, E, S, W];
+
+	int facing = 0;
+	char directions[4] = {E, N, S, W};
 
 	//pick a start and end (doesnt matter tbh)
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
