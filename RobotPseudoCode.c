@@ -1,16 +1,25 @@
+void handrailAlgo();
+void searchGoals();
 
+task main()
+{
+/*
+
+*/
+}
 /*
 X-axis is motorA + motorB, Y-axis is motorC
 
-array handrailAlgo(array mazeMap)
+void handrailAlgo()
 {
-	//Define solution array as an array of points in reference frame of maze cells (ex. 1-20 for a 20 cell maze)
+	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
+
 	//Solve Maze while recording movements
-	int currentCellX = 0, currentCellY = 0, goalCellX = 0, goalCellY = 0;
+	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0;
 
 	//search mazeMap for start and end points
-
+	searchGoals(goalCellX, goalCellY);
 	int facing = 0;
 	char directions[4] = {E, N, S, W};
 
@@ -51,9 +60,3 @@ void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCell
 Inputs: EV3 Buttons, Colour Sensor, Ultrasonic or Touch Sensor, Motor Encoders
 Outputs: 3x motor (x-axis, z-axis, pen)
 */
-task main()
-{
-/*
-
-*/
-}
