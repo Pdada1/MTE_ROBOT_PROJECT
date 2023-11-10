@@ -5,6 +5,12 @@ void moveToCell(int currentCellX, int currentCellY, int moveToCellX, int moveToC
 void controlXMotors(); //this is trivial
 
 
+/*
+void depthFirstSolve();
+void breadthFirstSolve();
+*/
+
+
 const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30;
 int mazeMap[MAZE_R][MAZE_C] = {0};
 task main()
