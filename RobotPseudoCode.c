@@ -1,27 +1,30 @@
 void handrailAlgo(); //pain
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY);
-void readMaze(); //this is fairly straightforward
+void readMaze(); //this is fairly straightforward, use moveToCell
 void moveToCell(int currentCellX, int currentCellY, int moveToCellX, int moveToCellY); //this is fairly straightforward, use controlXMotors()
-void controlXMotors(); //this is trivial
+void controlXMotors(); //this is trivial, use moveToCell
 void initialize(); //not easy
+bool isValidMove(int currentCellX, int currentCellY, int facingDir);
+int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions);
 
 /*
-void depthFirstSolve();
-void breadthFirstSolve();
+void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it workse)
+void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1;
+const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = 1;
 int mazeMap[MAZE_R][MAZE_C];
+
 task main()
 {
-	initialize();
+	//initialize();
 /*
 
 */
 }
-/*
-X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
+
+//X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
 
 void handrailAlgo()
 {
@@ -32,10 +35,8 @@ void handrailAlgo()
 	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0;
 
 	//search mazeMap for start and end points
-	searchEnds(startCellX, startCellY, goalCellX, goalCellY);
-
-	int facing = 0;
-	char directions[4] = {E, N, W, S};
+	//searchEnds(startCellX, startCellY, goalCellX, goalCellY);
+	char dir[4] = {'N', 'E', 'S', 'W'};
 	/*
 	E is [row][col-1]
 	N is [row-1][col]
@@ -46,10 +47,12 @@ void handrailAlgo()
 	*/
 
 	//pick a start and end (doesnt matter tbh)
+	int facingDir = 0; //Tells us which direction we most recently went
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
+		//makeNextMove(findNextMove())
 
-		//add current position to array of solution points (append?)
+		//modify mazeMap
 
 		//turn left, check forward
 		//(else turn right, check forward)x3
@@ -58,23 +61,17 @@ void handrailAlgo()
 		//update current position after each move (in the move functions)
 
 	}
-
-	simpleSolArray = simplify(solArray);
-	//this function will look through solArray, and cut sequences where the robot ends up back at the same point
-
-	return simpleSolArray;
-
-	or alternately copy the map array and modify?
 }
 
 
 void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCellY)
 {
-	int iEncodeX = nmotorEncoder[motorA]
-	int iEncodeY = nmotorEncoder[motorA]
-	int dEncodeX = (goalCellX - currentCellX) * 1 //this needs to be a constant
+	int iEncodeX = nmotorEncoder[motorA];
+	int iEncodeY = nmotorEncoder[motorA];
+	int dEncodeX = (goalCellX - currentCellX) * CELL_TO_ENCODER;
+	int dEncodeY = (goalCellY - currentCellY) * CELL_TO_ENCODER;
 }
-*/
+
 
 
 /*
@@ -92,4 +89,39 @@ void initialMaze()
 		}
 	}
 	return;
+}
+
+int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions)
+{
+	facingDir = (3 + facingDir )%4;
+	for (int attempts = 0; attempts < 4; attempts++)
+	{
+		if(isValidMove(currentCellX, currentCellY, facingDir))
+		{
+			return facingDir;
+		}
+		facingDir = (facingDir + 1) % 4;
+	}
+	return -1;
+}
+
+bool isValidMove(int currentCellX, int currentCellY, int facingDir)
+{
+	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - 1][currentCellX] == VALID_CELL)
+	{
+		return true;
+	}
+	else if(facingDir == 1 && currentCellX + 1 < MAZE_C - 1 && mazeMap[currentCellY][currentCellX + 1] == VALID_CELL)
+	{
+		return true;
+	}
+	else if(facingDir == 2 && currentCellY + 1 < MAZE_R - 1 && mazeMap[currentCellY + 1][currentCellX] == VALID_CELL)
+	{
+		return true;
+	}
+	else if(facingDir == 3 && currentCellX - 1 > 0 && mazeMap[currentCellY][currentCellX - 1] == VALID_CELL)
+	{
+		return true;
+	}
+	return false;
 }
