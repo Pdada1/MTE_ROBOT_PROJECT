@@ -1,9 +1,9 @@
-void handrailAlgo();
+void handrailAlgo(); //pain
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY);
 void readMaze(); //this is fairly straightforward
 void moveToCell(int currentCellX, int currentCellY, int moveToCellX, int moveToCellY); //this is fairly straightforward, use controlXMotors()
 void controlXMotors(); //this is trivial
-
+void initialize(); //not easy
 
 /*
 void depthFirstSolve();
@@ -11,16 +11,17 @@ void breadthFirstSolve();
 */
 
 
-const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30;
-int mazeMap[MAZE_R][MAZE_C] = {0};
+const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1;
+int mazeMap[MAZE_R][MAZE_C];
 task main()
 {
+	initialize();
 /*
 
 */
 }
 /*
-X-axis is motorA + motorB, Y-axis is motorC
+X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
 
 void handrailAlgo()
 {
@@ -34,7 +35,15 @@ void handrailAlgo()
 	searchEnds(startCellX, startCellY, goalCellX, goalCellY);
 
 	int facing = 0;
-	char directions[4] = {E, N, S, W};
+	char directions[4] = {E, N, W, S};
+	/*
+	E is [row][col-1]
+	N is [row-1][col]
+	W is [row][col+1]
+	S is [row+1][col]
+
+	*check to make sure entries are valid (between 0 and 40)*
+	*/
 
 	//pick a start and end (doesnt matter tbh)
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
@@ -42,10 +51,9 @@ void handrailAlgo()
 
 		//add current position to array of solution points (append?)
 
-		//if left cell, turn left and step forward (facing = (facing - 1) % 4, where direction is directions[facing])
-		//else if forward cell, step forward
-		//else if right cell, turn right and step forward (facing = (facing + 1) % 4)
-		//else, turn around (facing = (facing + 2) % 4)
+		//turn left, check forward
+		//(else turn right, check forward)x3
+		//step forward if forward is valid, else error
 
 		//update current position after each move (in the move functions)
 
@@ -73,3 +81,15 @@ void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCell
 Inputs: EV3 Buttons, Colour Sensor, Ultrasonic or Touch Sensor, Motor Encoders
 Outputs: 3x motor (x-axis, z-axis, pen)
 */
+
+void initialMaze()
+{
+	for (int row = 0; row < MAZE_R; row++)
+	{
+		for (int col = 0; col < MAZE_C; col++)
+		{
+			mazeMap[row][col] = 0;
+		}
+	}
+	return;
+}
