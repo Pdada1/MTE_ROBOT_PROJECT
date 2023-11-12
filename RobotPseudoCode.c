@@ -1,7 +1,7 @@
 void handrailAlgo(); //pain
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
 void readMaze(); //this is fairly straightforward, use moveToCell (Ximena)
-void moveToCell(int &currentCellX, int &currentCellY, int moveToCellX, int moveToCellY); //move from current to goal cell, update current position(Ximena)
+void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 void initialize(); //fairly straightforward
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
