@@ -112,7 +112,7 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 	{
 		return true;
 	}
-	else if(facingDir == 1 && currentCellX + 1 < MAZE_C - 1 && mazeMap[currentCellY][currentCellX + 1] == VALID_CELL)
+	else if(facingDir == 1 && currentCellX + 1 < MAZE_C - 1 && mazeMap[currentCellY][currentCellX + count] == VALID_CELL)
 	{
 		return true;
 	}
