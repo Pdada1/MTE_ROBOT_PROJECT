@@ -66,8 +66,8 @@ void handrailAlgo()
 
 void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCellY)
 {
-	int iEncodeX = nmotorEncoder[motorA];
-	int iEncodeY = nmotorEncoder[motorA];
+	int iEncodeX = nMotorEncoder[motorA];
+	int iEncodeY = nMotorEncoder[motorA];
 	int dEncodeX = (goalCellX - currentCellX) * CELL_TO_ENCODER;
 	int dEncodeY = (goalCellY - currentCellY) * CELL_TO_ENCODER;
 }
@@ -107,7 +107,8 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir, char directi
 
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 {
-	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - 1][currentCellX] == VALID_CELL)
+	int count=1;
+	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY -count][currentCellX] == VALID_CELL)
 	{
 		return true;
 	}
@@ -115,11 +116,11 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 	{
 		return true;
 	}
-	else if(facingDir == 2 && currentCellY + 1 < MAZE_R - 1 && mazeMap[currentCellY + 1][currentCellX] == VALID_CELL)
+	else if(facingDir == 2 && currentCellY + 1 < MAZE_R - 1 && mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
 	{
 		return true;
 	}
-	else if(facingDir == 3 && currentCellX - 1 > 0 && mazeMap[currentCellY][currentCellX - 1] == VALID_CELL)
+	else if(facingDir == 3 && currentCellX - 1 > 0 && mazeMap[currentCellY][currentCellX - count] == VALID_CELL)
 	{
 		return true;
 	}
