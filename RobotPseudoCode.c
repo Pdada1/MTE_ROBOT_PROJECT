@@ -1,25 +1,14 @@
 void handrailAlgo(); //pain
-<<<<<<< Updated upstream
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
-void readMaze(); //this is fairly straightforward, use moveToCell (Ximena)
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
-void initialize(); //fairly straightforward
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
-int findNextMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
 void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap
-
-=======
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY);
 void readMaze(); //this is fairly straightforward, use moveToCell, white = 6, black = -1
-void moveToCell(int currentCellX, int currentCellY, int moveToCellX, int moveToCellY); //this is fairly straightforward, use controlXMotors()
 //update currentCell, move robot
-void controlXMotors(int cells); //this is trivial, use moveToCell
 void initialize(); //not easy
-bool isValidMove(int currentCellX, int currentCellY, int facingDir); //complete
 int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions); //complete
 void storeNextMove(int currentCellX, int currentCellY, int facingDir);
->>>>>>> Stashed changes
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -32,6 +21,7 @@ int mazeMap[MAZE_R][MAZE_C];
 task main()
 {
 	initialize();
+	readMaze();
 /*
 
 */
@@ -44,7 +34,7 @@ void readMaze()
         for (int col = 0; col < MAZE_C; col++)
         {
             //assume colour sensor is S3; if colour == black
-            if(SensorValue[S3] == -1)
+            if(SensorValue[S1] == -1)
             {
                 mazeMap[row][col] = -1;
             }
@@ -73,7 +63,7 @@ void moveToCell(int currentCellX, int currentCellY, int nextCellX, int nextCellY
     motor[motorA] = motor[motorB] = MOTOR_POWER;
     while(nMotorEncoder[motorA] < dEncodeX)
     {}
-    motor[motorA] = motor[motorB] 0;
+    motor[motorA] = motor[motorB]=0;
     //move the y distance
     motor[motorC] = MOTOR_POWER;
     while(nMotorEncoder[motorC] < dEncodeY)
@@ -121,7 +111,6 @@ void handrailAlgo()
 }
 
 
-<<<<<<< Updated upstream
 /*
 void cellToMotor(int currentCellX, int currentCellY, int nextCellX, int next CellY)
 {
@@ -133,8 +122,6 @@ void cellToMotor(int currentCellX, int currentCellY, int nextCellX, int next Cel
 }
 */
 
-=======
->>>>>>> Stashed changes
 
 /*
 Inputs: EV3 Buttons, Colour Sensor, Ultrasonic or Touch Sensor, Motor Encoders
