@@ -19,7 +19,7 @@ int mazeMap[MAZE_R][MAZE_C];
 
 task main()
 {
-	//initialize();
+	initialize();
 /*
 
 */
@@ -78,14 +78,66 @@ Inputs: EV3 Buttons, Colour Sensor, Ultrasonic or Touch Sensor, Motor Encoders
 Outputs: 3x motor (x-axis, z-axis, pen)
 */
 
-void initialMaze()
+
+void initialize()
 {
+	//sensor and motor encoder initialization and reset
+	const int MOTOR_CONFIG_PWR=10;
+	SensorType[S1]=sensorEV3_Color;
+	SensorType[S2]=sensorEV3_Touch;
+	SensorMode[S1]=modeEV3Color_Color;
+	nMotorEncoder[motorA]=nMotorEncoder[motorB]=nMotorEncoder[motorC]=nMotorEncoder[motorD]=0;
+
+	//fills out 2d bit array with default value of 0
 	for (int row = 0; row < MAZE_R; row++)
 	{
 		for (int col = 0; col < MAZE_C; col++)
 		{
 			mazeMap[row][col] = 0;
 		}
+	}
+	//displays configuration intstructions for user to position print head on first cell at 0,0
+	displayString(2, "Use the buttons");
+	displayString(3, "to move the align");
+	displayString(4,"the print head");
+	displayString(4, "with the top left");
+	displayString(5,"cell in the maze");
+
+	bool button_Pressed=false;
+	//allows the user to move the print head by using the buttons
+	while(!getButtonPress(buttonEnter))
+	{
+		displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		while(getButtonPress(buttonUp))
+		{
+			button_Pressed=true;
+			motor[motorD]=MOTOR_CONFIG_PWR;
+			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		}
+			while(getButtonPress(buttonDown))
+		{
+			button_Pressed=true;
+			motor[motorD]=-MOTOR_CONFIG_PWR;
+			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		}
+			while(getButtonPress(buttonLeft))
+		{
+			button_Pressed=true;
+			motor[motorA]=motor[motorC]=-MOTOR_CONFIG_PWR;
+			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		}
+			while(getButtonPress(buttonRight))
+		{
+			button_Pressed=true;
+			motor[motorA]=motor[motorC]=MOTOR_CONFIG_PWR;
+			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		}
+		if(button_Pressed)
+		{
+			motor[motorA]=motor[motorB]=motor[motorC]=motor[motorD]=0;
+			button_Pressed=false;
+		}
+
 	}
 	return;
 }
