@@ -1,19 +1,20 @@
 void handrailAlgo(); //pain
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY);
-void readMaze(); //this is fairly straightforward, use moveToCell
-void moveToCell(int currentCellX, int currentCellY, int moveToCellX, int moveToCellY); //this is fairly straightforward, use controlXMotors()
-void controlXMotors(); //this is trivial, use moveToCell
-void initialize(); //not easy
-bool isValidMove(int currentCellX, int currentCellY, int facingDir);
-int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions);
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
+void readMaze(); //this is fairly straightforward, use moveToCell (Ximena)
+void moveToCell(int &currentCellX, int &currentCellY, int moveToCellX, int moveToCellY); //move from current to goal cell, update current position(Ximena)
+//void controlXMotors(int cells); //this is trivial, use moveToCell
+void initialize(); //fairly straightforward
+bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
+int findNextMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
+void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap
 
 /*
-void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it workse)
+void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = 1;
+const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = -1;
 int mazeMap[MAZE_R][MAZE_C];
 
 task main()
@@ -54,24 +55,22 @@ void handrailAlgo()
 
 		//modify mazeMap
 
-		//turn left, check forward
-		//(else turn right, check forward)x3
-		//step forward if forward is valid, else error
-
 		//update current position after each move (in the move functions)
 
 	}
 }
 
 
-void cellToMotor(int currentCellX, int currentCellY, int goalCellX, int goalCellY)
+/*
+void cellToMotor(int currentCellX, int currentCellY, int nextCellX, int next CellY)
 {
-	int iEncodeX = nMotorEncoder[motorA];
-	int iEncodeY = nMotorEncoder[motorA];
+	int iEncodeX1 = nMotorEncoder[motorA];
+	int iEncodeX2 = nMotorEncoder[motorB];
+	int iEncodeY = nMotorEncoder[motorD];
 	int dEncodeX = (goalCellX - currentCellX) * CELL_TO_ENCODER;
 	int dEncodeY = (goalCellY - currentCellY) * CELL_TO_ENCODER;
 }
-
+*/
 
 
 /*
@@ -93,7 +92,7 @@ void initialMaze()
 
 int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions)
 {
-	facingDir = (3 + facingDir )%4;
+	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 	for (int attempts = 0; attempts < 4; attempts++)
 	{
 		if(isValidMove(currentCellX, currentCellY, facingDir))
@@ -107,8 +106,8 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir, char directi
 
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 {
-	int count=1;
-	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY -count][currentCellX] == VALID_CELL)
+	int count = 1;//because constants don't work here??
+	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - count][currentCellX] == VALID_CELL)
 	{
 		return true;
 	}
