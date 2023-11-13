@@ -27,6 +27,56 @@ task main()
 */
 }
 
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY)
+{
+	//assume we start at the upper left corner of the maze
+	//path: scan and move all the way right, down, left, up
+
+	int rowup = 0; //start at upper left corner
+	for (int col = 0; col < MAZE_C; col++) //loop scans and moves robot right
+	{
+		if (SensorValue[S1] == 6)
+		{
+			startCellX = rowup;
+			startCellY = col;
+		}
+		//move colour sensor right one cell
+	}
+
+	int colright = MAZE_C-1; //start at upper right corner
+	for (int row = 0; row < MAZE_R; row++) //loop scans and moves robot down
+	{
+		if (SensorValue[S1] == 6)
+		{
+			goalCellX = row;
+			goalCellY = colright;
+		}
+		//move colour sensor down one cell
+	}
+
+	int rowdown = MAZE_R-1; //start at bottom right corner
+	for (int col = MAZE_C-1; col >= 0; col--) //loop scans and moves robot left
+	{
+		if (SensorValue[S1] == 6)
+		{
+			goalCellX = rowdown;
+			goalCellY = col;
+		}
+		//move colour sensor left one cell
+
+	int colleft = 0; //start at bottom left corner
+	for (int row = MAZE_R-1; row >= 0; row--) //loop scans and moves robot up
+	{
+		if (SensorValue[S1] == 6)
+		{
+			goalCellX = row;
+			goalCellY = colleft;
+		}
+		//move colour sensor up one cell
+	}
+
+	
+}
 void readMaze()
 {
     for (int row = 0; row < MAZE_R; row++)
