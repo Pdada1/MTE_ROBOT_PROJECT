@@ -1,13 +1,13 @@
 void handrailAlgo(); //pain
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene) *
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
-bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash)
+bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
 void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap
 void readMaze(); //this is fairly straightforward, use moveToCell, white = 6, black = -1
 //update currentCell, move robot
 void initialize(); //not easy
-int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions); //complete
+int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions); //complete *
 void storeNextMove(int currentCellX, int currentCellY, int facingDir);
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
