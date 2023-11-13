@@ -42,20 +42,24 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
     	{}
    	motor[motorA] = motor[motorB]=0;
 
-	if(SensorValue [S1] == 6) //if we detect the white start tile at the 2nd last colomn from the right
+	if(SensorValue[S1] == 6) //if we detect the white start tile at the 2nd last colomn from the right
 		{
 			startCellX = MAZE_C-2; //in the 2nd last colomn from the right
 			startCellY = 0; //in the 1st row from the top
 			goalCellX = 1; //in the 2nd colomn from the left
 			goalCellY = MAZE_R-1; //in the 1st row from the bottom
 		}
-	else
+	else if(SensorValue[S1] == -1) //if we detect black tile instead (do don't really need this tbh)
 		{
 			startCellX = 0; //in the 1st colomn from the left
 			startCellY = 1; //in the 2nd row from the top
 			goalCellX = MAZE_C-1; //in the 1st colomn from the right
 			goalCellY = MAZE_R-2; //in the 2nd row fron the bottom
 		}
+	else
+	{
+		return EXIT_FAILURE; // in case it is not a maze at all
+	}
 	
 
 	//returns back to the initial position
