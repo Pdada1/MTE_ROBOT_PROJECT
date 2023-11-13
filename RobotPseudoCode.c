@@ -56,6 +56,12 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 			}
 		}
    	 motor[motorA] = motor[motorB]=0;
+
+	//returns back to the initial position
+	motor[motorA] = motor[motorB] = -1*MOTOR_POWER;
+	while(nMotorEncoder[motorA] > 0)
+	{}
+	motor[motorA] = motor[motorB] = 0;
 }
 
 
