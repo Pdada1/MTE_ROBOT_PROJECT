@@ -35,12 +35,12 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 	
 	//while we move the robot to the right:
 	nMotorEncoder[motorA] = 0; //is this needed?
-	const int MOVE_TO_END = 40;
+	const int MOVE_TO_END = MAZE_C-2; //move directly to the 2nd last colomn from the right
 	
 	motor[motorA] = motor[motorB] = MOTOR_POWER;
     	while(nMotorEncoder[motorA] < MOVE_TO_END*CELL_TO_ENCODER)
     		{
-		if(SensorValue [S1] == 6) //if we detect the white start tile
+		if(SensorValue [S1] == 6) //if we detect the white start tile at the 2nd last colomn from the right
 			{
 				startCellX = MAZE_C-2; //in the 2nd last colomn from the right
 				startCellY = 0; //in the 1st row from the top
@@ -52,14 +52,14 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 				startCellX = 0; //in the 1st colomn from the left
 				startCellY = 1; //in the 2nd row from the top
 				goalCellX = MAZE_C-1; //in the 1st colomn from the right
-				goalCellY = MAZE_R-2; //in the 2nd last row fron the bottom
+				goalCellY = MAZE_R-2; //in the 2nd row fron the bottom
 			}
 		}
    	 motor[motorA] = motor[motorB]=0;
 
 	//returns back to the initial position
 	motor[motorA] = motor[motorB] = -1*MOTOR_POWER;
-	while(nMotorEncoder[motorA] > 0)
+	while(nMotorEncoder[motorA] > 0) 
 	{}
 	motor[motorA] = motor[motorB] = 0;
 }
