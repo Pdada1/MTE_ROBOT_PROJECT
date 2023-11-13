@@ -45,7 +45,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 				startCellX = MAZE_C-2; //in the 2nd last colomn from the right
 				startCellY = 0; //in the 1st row from the top
 				goalCellX = 1; //in the 2nd colomn from the left
-				goalCellY = MAZE_C-1; //in the 1st row from the bottom
+				goalCellY = MAZE_R-1; //in the 1st row from the bottom
 			}
 		else
 			{
