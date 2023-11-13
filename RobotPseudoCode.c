@@ -27,11 +27,13 @@ task main()
 */
 }
 
+
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY)
 {
 	//assume we start at the upper left corner of the maze
 	//path: scan and move all the way right, down, left, up
 
+	//assume the start cell will always be at the upper row
 	int rowup = 0; //start at upper left corner
 	for (int col = 0; col < MAZE_C; col++) //loop scans and moves robot right
 	{
