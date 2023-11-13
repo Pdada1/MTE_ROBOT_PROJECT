@@ -34,6 +34,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 	//assume we start at the upper left corner and the colour sensor is already at the 1st tile (we can edit this if we need to)
 	
 	//while we move the robot to the right:
+	nMotorEncoder[motorA] = 0; //is this needed?
 	const int MOVE_TO_END = 40;
 	
 	motor[motorA] = motor[motorB] = MOTOR_POWER;
@@ -41,7 +42,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
     		{
 		if(SensorValue [S1] == 6) //if we detect the white start tile
 			{
-				startCellX = MAZE_C-1; //in the 2nd last colomn from the right
+				startCellX = MAZE_C-2; //in the 2nd last colomn from the right
 				startCellY = 0; //in the 1st row from the top
 				goalCellX = 1; //in the 2nd colomn from the left
 				goalCellY = MAZE_C-1; //in the 1st row from the bottom
