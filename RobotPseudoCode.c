@@ -31,7 +31,7 @@ task main()
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY)
 {
 	//only scan the upper row from left to right
-	//assume we start at the upper left corner and the colour sensor is already at the 1st tile (we can edit this if we need to)
+	//assume we start at the upper left corner and the colour sensor is already at the 1st tile
 
 	nMotorEncoder[motorA] = 0;
 	const int MOVE_TO_END = MAZE_C-2;
