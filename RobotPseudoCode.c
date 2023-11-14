@@ -1,5 +1,5 @@
 void handrailAlgo(); //pain
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene) *
+//void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene) * Surprise, we don't actually need this - sorry :(
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
@@ -18,6 +18,8 @@ void breadthFirstSolve(); //genuine suffering
 const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = -1;
 int mazeMap[MAZE_R][MAZE_C];
 
+//start is [1][0], end is [MAZE_R - 1][MAZE_C]
+
 task main()
 {
 	/*
@@ -35,7 +37,7 @@ task main()
 
 */
 }
-
+/*
 
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY) //i think we need to take a look at this
 {
@@ -81,7 +83,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 	motor[motorA] = motor[motorB] = 0;
 }
 
-
+*/
 
 void readMaze()
 {
