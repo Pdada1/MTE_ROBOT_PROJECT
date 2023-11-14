@@ -20,15 +20,16 @@ int mazeMap[MAZE_R][MAZE_C];
 
 task main()
 {
+	//order of function initializations
 	initialize();
-	movetoCell();
+	movetoCell(); //need to differentiate between moving the pen and colour sensor
 	searchEnds();
 	readMaze();
-	handrailAlgo();
 	isValidMove();
 	findNextMove();
 	makeNextMove();
 	storeNextMove();
+	handrailAlgo();
 /*
 
 */
