@@ -21,8 +21,14 @@ int mazeMap[MAZE_R][MAZE_C];
 task main()
 {
 	initialize();
+	movetoCell();
 	searchEnds();
 	readMaze();
+	findNextMove();
+	isValidMove();
+	makeNextMove();
+	storeNextMove();
+	handrailAlgo();
 /*
 
 */
