@@ -32,7 +32,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 {
 	//only scan the upper row from left to right
 	//assume we start at the upper left corner and the colour sensor is already at the 1st tile (we can edit this if we need to)
-	
+
 	nMotorEncoder[motorA] = 0;
 	const int MOVE_TO_END = MAZE_C-2;
 
@@ -60,11 +60,11 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 	{
 		return EXIT_FAILURE; // in case it is not a maze at all
 	}
-	
+
 
 	//returns back to the initial position
 	motor[motorA] = motor[motorB] = -1*MOTOR_POWER;
-	while(nMotorEncoder[motorA] > 0) 
+	while(nMotorEncoder[motorA] > 0)
 	{}
 	motor[motorA] = motor[motorB] = 0;
 }
@@ -177,8 +177,8 @@ void initialize()
 {
 	//sensor and motor encoder initialization and reset
 	const int MOTOR_CONFIG_PWR=10;
-	SensorType[S1]=sensorEV3_Color;
-	SensorType[S2]=sensorEV3_Touch;
+	SensorType[S1]=SensorEV3_Color;
+	SensorType[S2]=SensorEV3_Touch;
 	SensorMode[S1]=modeEV3Color_Color;
 	nMotorEncoder[motorA]=nMotorEncoder[motorB]=nMotorEncoder[motorC]=nMotorEncoder[motorD]=0;
 
@@ -192,10 +192,10 @@ void initialize()
 	}
 	//displays configuration intstructions for user to position print head on first cell at 0,0
 	displayString(2, "Use the buttons");
-	displayString(3, "to move the align");
+	displayString(3, "to align");
 	displayString(4,"the print head");
-	displayString(4, "with the top left");
-	displayString(5,"cell in the maze");
+	displayString(5, "with the top left");
+	displayString(6,"cell in the maze");
 
 	bool button_Pressed=false;
 	//allows the user to move the print head by using the buttons
