@@ -3,11 +3,11 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
-void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap (char)
+void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
 void readMaze(); //this is fairly straightforward, use moveToCell, white = 6, black = -1
 //update currentCell, move robot
 void initialize(); //not easy
-int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions); //complete *
+int findNextMove(int currentCellX, int currentCellY, int facingDir); //complete *
 void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
@@ -20,9 +20,10 @@ int mazeMap[MAZE_R][MAZE_C];
 
 task main()
 {
+	/*
 	//order of function initializations
 	initialize();
-	movetoCell(); //need to differentiate between moving the pen and colour sensor
+	moveToCell(); //need to differentiate between moving the pen and colour sensor
 	searchEnds();
 	readMaze();
 	isValidMove();
@@ -30,13 +31,13 @@ task main()
 	makeNextMove();
 	storeNextMove();
 	handrailAlgo();
-/*
+
 
 */
 }
 
 
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY)
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY) //i think we need to take a look at this
 {
 	//only scan the upper row from left to right
 	//assume we start at the upper left corner and the colour sensor is already at the 1st tile
@@ -66,7 +67,10 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 		}
 	else
 	{
-		return EXIT_FAILURE; // in case it is not a maze at all
+		startCellX = -1; // in case it is not a maze at all
+		startCellY = -1;
+		goalCellX = -10;
+		startCellY = -10;
 	}
 
 
@@ -81,6 +85,7 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 
 void readMaze()
 {
+	for (int col = 0; col < MAZE_C; col++)
     for (int row = 0; row < MAZE_R; row++)
     {
         //scans from the left to the right at even rows
@@ -124,7 +129,7 @@ void readMaze()
 }
 
 //X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
-void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY)
+void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
 {
     nMotorEncoder[motorA] = 0;
     nMotorEncoder[motorB] = 0; //not sure if this line is necessary
@@ -207,9 +212,12 @@ void initialize()
 {
 	//sensor and motor encoder initialization and reset
 	const int MOTOR_CONFIG_PWR=10;
-	SensorType[S1]=SensorEV3_Color;
-	SensorType[S2]=SensorEV3_Touch;
-	SensorMode[S1]=modeEV3Color_Color;
+	SensorType[S1] = sensorEV3_Color;
+	wait1Msec(10);
+	SensorType[S2] = sensorEV3_Touch;
+	wait1Msec(10);
+	SensorMode[S1] = modeEV3Color_Color;
+	wait1Msec(10);
 	nMotorEncoder[motorA]=nMotorEncoder[motorB]=nMotorEncoder[motorC]=nMotorEncoder[motorD]=0;
 
 	//fills out 2d bit array with default value of 0
@@ -306,22 +314,26 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int count = 1;
-	int nextDir = findNextMove(int currentCellX, int currentCellY, int facingDir, char directions);
+	int nextDir = findNextMove(int currentCellX, int currentCellY, int facingDir);
 	if (nextDir == 0) //if we need to go up
 	{
-		mazeMap[currentCellY-count][currentCellX] == 0;
+		mazeMap[currentCellY-count][currentCellX] = 0;
+		currentCellY -= 1;
 	}
 	else if (nextDir == 1) //if we need to go right
 	{
-		mazeMap[currentCellY][currentCellX+count] == 0;
+		mazeMap[currentCellY][currentCellX+count] = 0;
+		currentCellX += 1;
 	}
 	else if (nextDir == 2) //if we need to go down
 	{
-		mazeMap[currentCellY+count][currentCellX] == 0;
+		mazeMap[currentCellY+count][currentCellX] = 0;
+		currentCellY += 1;
 	}
 	else if (nextDir == 3) //if we need to go left
 	{
-		mazeMap[currentCellY][currentCellX-count] == 0;
+		mazeMap[currentCellY][currentCellX-count] = 0;
+		currentCellX -= 1;
 	}
 }
 
@@ -332,6 +344,3 @@ void storeNextMove(int currentCellX, int currentCellY, int facingDir)
 
 
 }
-
-
-
