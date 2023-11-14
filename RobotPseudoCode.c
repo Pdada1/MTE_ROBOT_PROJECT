@@ -265,20 +265,6 @@ void initialize()
 	return;
 }
 
-int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions)
-{
-	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
-	for (int attempts = 0; attempts < 4; attempts++)
-	{
-		if(isValidMove(currentCellX, currentCellY, facingDir))
-		{
-			return facingDir;
-		}
-		facingDir = (facingDir + 1) % 4;
-	}
-	return -1;
-}
-
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 {
 	int count = 1;//because constants don't work here??
@@ -300,3 +286,21 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 	}
 	return false;
 }
+
+int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions)
+{
+	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
+	for (int attempts = 0; attempts < 4; attempts++)
+	{
+		if(isValidMove(currentCellX, currentCellY, facingDir))
+		{
+			return facingDir;
+		}
+		facingDir = (facingDir + 1) % 4;
+	}
+	return -1;
+}
+
+void makeNextMove(int currentCellX, int currentCellY, int facingDir)
+
+
