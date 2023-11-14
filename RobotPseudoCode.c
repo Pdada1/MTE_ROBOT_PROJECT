@@ -4,7 +4,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
-void readMaze(); //this is fairly straightforward, use moveToCell, white = 6, black = -1
+void readMaze(); //this is fairly straightforward, use moveToCell, white == 6, black == -1
 //update currentCell, move robot
 void initialize(); //not easy
 int findNextMove(int currentCellX, int currentCellY, int facingDir); //complete *
