@@ -24,11 +24,11 @@ task main()
 	movetoCell();
 	searchEnds();
 	readMaze();
+	handrailAlgo();
 	isValidMove();
 	findNextMove();
 	makeNextMove();
 	storeNextMove();
-	handrailAlgo();
 /*
 
 */
