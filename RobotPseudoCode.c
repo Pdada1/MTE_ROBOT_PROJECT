@@ -305,24 +305,22 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int count = 1;
-	if (facingDir == 0)
+	if (facingDir == 0) //if we need to go up
 	{
 		mazeMap[currentCellY-count][currentCellX] == 0;
 	}
-	else if (facingDir == 1)
+	else if (facingDir == 1) //if we need to go right
 	{
 		mazeMap[currentCellY][currentCellX+count] == 0;
 	}
-	else if (facingDir == 2)
+	else if (facingDir == 2) //if we need to go down
 	{
 		mazeMap[currentCellY+count][currentCellX] == 0;
 	}
-	else if (facingDir == 3)
+	else if (facingDir == 3) //if we need to go left
 	{
 		mazeMap[currentCellY][currentCellX-count] == 0;
 	}
-
-
 }
 
 
