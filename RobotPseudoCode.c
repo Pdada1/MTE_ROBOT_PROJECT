@@ -21,6 +21,7 @@ int mazeMap[MAZE_R][MAZE_C];
 task main()
 {
 	initialize();
+	searchEnds();
 	readMaze();
 /*
 
