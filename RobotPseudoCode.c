@@ -75,26 +75,48 @@ void readMaze()
 {
     for (int row = 0; row < MAZE_R; row++)
     {
-        for (int col = 0; col < MAZE_C; col++)
+        //scans from the left to the right at even rows
+        if(row % 2 == 0)
         {
-            //assume colour sensor is S3; if colour == black
-            if(SensorValue[S1] == -1)
+            for (int col = 0; col < MAZE_C; col++)
             {
-                mazeMap[row][col] = -1;
+                //assume colour sensor is S3; if colour == black
+                if(SensorValue[S1] == -1)
+                {
+                    mazeMap[row][col] = -1;
+                }
+                    //the colour is white
+                else
+                {
+                    mazeMap[row][col] = 0;
+                }
             }
-            //the colour is white
-            else
-            {
-                mazeMap[row][col] = 0;
-            }
-
+            //move one cell to the right
+            moveToCell(col, row, col + 1, row);
         }
+        //scans from the right to the left at even rows
+        else
+        {
+            for (int col = MAZE_C - 1; col >= 0 ; col--)
+            {
+                if(SensorValue[S1] == -1)
+                {
+                    mazeMap[row][col] = -1;
+                }
+                else
+                {
+                    mazeMap[row][col] = 0;
+                }
+            }
+            moveToCell(col, row, col - 1, row);
+        }
+        moveToCell(col, row, col, row + 1);
     }
     return;
 }
 
 //X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
-void moveToCell(int currentCellX, int currentCellY, int nextCellX, int nextCellY)
+void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY)
 {
     nMotorEncoder[motorA] = 0;
     nMotorEncoder[motorB] = 0; //not sure if this line is necessary
