@@ -24,8 +24,8 @@ task main()
 	movetoCell();
 	searchEnds();
 	readMaze();
-	findNextMove();
 	isValidMove();
+	findNextMove();
 	makeNextMove();
 	storeNextMove();
 	handrailAlgo();
