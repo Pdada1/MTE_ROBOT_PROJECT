@@ -3,12 +3,12 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
-void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap
+void makeNextMove(int currentCellX, int currentCellY, int facingDir); //make next move and update mazeMap (char)
 void readMaze(); //this is fairly straightforward, use moveToCell, white = 6, black = -1
 //update currentCell, move robot
 void initialize(); //not easy
 int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions); //complete *
-void storeNextMove(int currentCellX, int currentCellY, int facingDir);
+void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -302,5 +302,36 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir, char directi
 }
 
 void makeNextMove(int currentCellX, int currentCellY, int facingDir)
+{
+	//dir 0 is up, 1 is right, 2 is down, 3 is left
+	int count = 1;
+	if (facingDir == 0)
+	{
+		mazeMap[currentCellY-count][currentCellX] == 0;
+	}
+	else if (facingDir == 1)
+	{
+		mazeMap[currentCellY][currentCellX+count] == 0;
+	}
+	else if (facingDir == 2)
+	{
+		mazeMap[currentCellY+count][currentCellX] == 0;
+	}
+	else if (facingDir == 3)
+	{
+		mazeMap[currentCellY][currentCellX-count] == 0;
+	}
+
+
+}
+
+
+void storeNextMove(int currentCellX, int currentCellY, int facingDir)
+{
+
+
+
+}
+
 
 
