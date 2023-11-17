@@ -9,13 +9,17 @@ void readMaze(); //this is fairly straightforward, use moveToCell, white == 6, b
 void initialize(); //not easy
 int findNextMove(int currentCellX, int currentCellY, int facingDir); //complete *
 void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
+
+void swapToPen(); //move pen tip to (0, 0) and then put pen down
+
+void drawMaze();
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = -1;
+const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = 1;
 int mazeMap[MAZE_R][MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
@@ -28,62 +32,42 @@ task main()
 	moveToCell(); //need to differentiate between moving the pen and colour sensor
 	searchEnds();
 	readMaze();
-	isValidMove();
-	findNextMove();
-	makeNextMove();
-	storeNextMove();
+	//start timer
 	handrailAlgo();
+	//end timer
 
 
+	//draw maze
 */
 }
-/*
 
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY) //i think we need to take a look at this
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &currentCellX, int &currentCellY) //i think we need to take a look at this
 {
 	//only scan the upper row from left to right
 	//assume we start at the upper left corner and the colour sensor is already at the 1st tile
 
 	nMotorEncoder[motorA] = 0;
-	const int MOVE_TO_END = MAZE_C-2;
 
 	//move directly to the 2nd last colomn from the right
-	motor[motorA] = motor[motorB] = MOTOR_POWER;
-    	while(nMotorEncoder[motorA] < MOVE_TO_END*CELL_TO_ENCODER)
-    	{}
-   	motor[motorA] = motor[motorB]=0;
+	moveToCell(currentCellX, currentCellY, 0, 1); //move one down from starting
 
-	if(SensorValue[S1] == 6) //if we detect the white start tile at the 2nd last colomn from the right
+	if(SensorValue[S1] == 6) //if we detect the white start tile
 		{
-			startCellX = MAZE_C-2; //in the 2nd last colomn from the right
-			startCellY = 0; //in the 1st row from the top
-			goalCellX = 1; //in the 2nd colomn from the left
-			goalCellY = MAZE_R-1; //in the 1st row from the bottom
-		}
-	else if(SensorValue[S1] == -1) //if we detect black tile instead (do don't really need this tbh)
-		{
-			startCellX = 0; //in the 1st colomn from the left
-			startCellY = 1; //in the 2nd row from the top
-			goalCellX = MAZE_C-1; //in the 1st colomn from the right
-			goalCellY = MAZE_R-2; //in the 2nd row fron the bottom
+			startCellX = 0; //in the 2nd last colomn from the left
+			startCellY = 1; //in the 1st row from the top
+			goalCellX = MAZE_C-1; //in the 1st column from the right
+			goalCellY = MAZE_R-2; //in the 2nd row from the bottom
 		}
 	else
-	{
-		startCellX = -1; // in case it is not a maze at all
-		startCellY = -1;
-		goalCellX = -10;
-		startCellY = -10;
-	}
-
-
+		{
+			startCellX = MAZE_C-2; //in the 1st colomn from the left
+			startCellY = 0; //in the 2nd row from the top
+			goalCellX = 1; //in the 1st colomn from the right
+			goalCellY = MAZE_R-1; //in the 2nd row fron the bottom
+		}
 	//returns back to the initial position
-	motor[motorA] = motor[motorB] = -1*MOTOR_POWER;
-	while(nMotorEncoder[motorA] > 0)
-	{}
-	motor[motorA] = motor[motorB] = 0;
+	moveToCell(currentCellX, currentCellY, 0, 0);
 }
-
-*/
 
 void readMaze()
 {
@@ -96,7 +80,7 @@ void readMaze()
             for (int col = 0; col < MAZE_C; col++)
             {
                 //assume colour sensor is S3; if colour == black
-                if(SensorValue[S1] == -1)
+                if(SensorValue[S1] == 6)
                 {
                     mazeMap[row][col] = -1;
                 }
@@ -133,25 +117,35 @@ void readMaze()
 //X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
 {
-    nMotorEncoder[motorA] = 0;
-    nMotorEncoder[motorB] = 0; //not sure if this line is necessary
-    nMotorEncoder[motorC] = 0;
+    int iEncodeXA = nMotorEncoder[motorA];
+    int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
+    int iEncodeY = nMotorEncoder[motorC];
     int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER;
     int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER;
-    //put pen down
-    motor[motorD] = 100;
     //move the x distance
-    motor[motorA] = motor[motorB] = MOTOR_POWER;
-    while(nMotorEncoder[motorA] < dEncodeX)
+    if (currentCellX > nextCellX)
+    {
+    	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
+    }
+    else
+    {
+    	motor[motorA] = motor[motorB] = -MOTOR_POWER;
+    }
+    while(abs(nMotorEncoder[motorA] - iEncodeXA) < abs(dEncodeX))
     {}
     motor[motorA] = motor[motorB]=0;
     //move the y distance
-    motor[motorC] = MOTOR_POWER;
-    while(nMotorEncoder[motorC] < dEncodeY)
+    if (currentCellY > nextCellY)
+    {
+    	motor[motorC] = MOTOR_POWER;
+    }
+    else
+    {
+    	motor[motorC] = -MOTOR_POWER;
+    }
+    while(abs(nMotorEncoder[motorC] - iEncodeY < abs(dEncodeY))
     {}
     motor[motorC] = 0;
-    //lift the pen
-    motor[motorD] = 0;
     //update the current cell coordinate
     currentCellX = nextCellX;
     currentCellY = nextCellY;
@@ -279,7 +273,7 @@ void initialize()
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 {
 	int count = 1;//because constants don't work here??
-	if(facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - count][currentCellX] == VALID_CELL)
+	if(facingDir == 0 && currentCellY - 1 > 0 && abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
 	{
 		return true;
 	}
@@ -298,7 +292,7 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)
 	return false;
 }
 
-int findNextMove(int currentCellX, int currentCellY, int facingDir, char directions)
+int findNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 	for (int attempts = 0; attempts < 4; attempts++)
@@ -316,7 +310,7 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int count = 1;
-	int nextDir = findNextMove(int currentCellX, int currentCellY, int facingDir);
+	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
 	if (nextDir == 0) //if we need to go up
 	{
 		mazeMap[currentCellY-count][currentCellX] = 0;
