@@ -333,10 +333,3 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 	}
 }
 
-
-void storeNextMove(int currentCellX, int currentCellY, int facingDir)
-{
-
-
-
-}
