@@ -14,15 +14,104 @@ void breadthFirstSolve(); //genuine suffering
 */
 
 
+<<<<<<< Updated upstream
 const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = -1;
+=======
+const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 20, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 1;
+>>>>>>> Stashed changes
 int mazeMap[MAZE_R][MAZE_C];
 
 task main()
 {
+<<<<<<< Updated upstream
+=======
+
+	//order of function initializations
+>>>>>>> Stashed changes
 	initialize();
 /*
 
+<<<<<<< Updated upstream
 */
+=======
+
+	//draw maze
+
+}
+
+void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &currentCellX, int &currentCellY) //i think we need to take a look at this
+{
+	//only scan the upper row from left to right
+	//assume we start at the upper left corner and the colour sensor is already at the 1st tile
+
+	nMotorEncoder[motorA] = 0;
+
+	//move directly to the 2nd last colomn from the right
+	moveToCell(currentCellX, currentCellY, 0, 1); //move one down from starting
+
+	if(SensorValue[S1] == 6) //if we detect the white start tile
+		{
+			startCellX = 0; //in the 2nd last colomn from the left
+			startCellY = 1; //in the 1st row from the top
+			goalCellX = MAZE_C-1; //in the 1st column from the right
+			goalCellY = MAZE_R-2; //in the 2nd row from the bottom
+		}
+	else
+		{
+			startCellX = MAZE_C-2; //in the 1st colomn from the left
+			startCellY = 0; //in the 2nd row from the top
+			goalCellX = 1; //in the 1st colomn from the right
+			goalCellY = MAZE_R-1; //in the 2nd row fron the bottom
+		}
+	//returns back to the initial position
+	moveToCell(currentCellX, currentCellY, 0, 0);
+}
+
+void readMaze()
+{
+	eraseDisplay();
+	for (int col = 0; col < MAZE_C; col++)
+    for (int row = 0; row < MAZE_R; row++)
+    {
+        //scans from the left to the right at even rows
+        if(row % 2 == 0)
+        {
+            for (int col = 0; col < MAZE_C; col++)
+            {
+                //assume colour sensor is S3; if colour == white
+                if(SensorValue[S1] == 6)
+                {
+                    mazeMap[row][col] = 0;
+                }
+                    //the colour is black
+                else
+                {
+                    mazeMap[row][col] = -1;
+                }
+            }
+            //move one cell to the right
+            moveToCell(col, row, col + 1, row);
+        }
+        //scans from the right to the left at even rows
+        else
+        {
+            for (int col = MAZE_C - 1; col >= 0 ; col--)
+            {
+                if(SensorValue[S1] == -1)
+                {
+                    mazeMap[row][col] = -1;
+                }
+                else
+                {
+                    mazeMap[row][col] = 0;
+                }
+            }
+            moveToCell(col, row, col - 1, row);
+        }
+        moveToCell(col, row, col, row + 1);
+    }
+    return;
+>>>>>>> Stashed changes
 }
 
 //X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
