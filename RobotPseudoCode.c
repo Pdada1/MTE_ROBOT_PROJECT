@@ -1,3 +1,13 @@
+/* Code convetions
+Motors for x direction: A,B
+Motors for y direction: C
+Motors for pen: D
+Color Sensor Port: S1
+Touch Sensor Port: S2
+*/
+
+
+
 void handrailAlgo(); //pain
 //void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene) * Surprise, we don't actually need this - sorry :(
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
@@ -29,16 +39,16 @@ task main()
 	/*
 	//order of function initializations
 	initialize();
-	moveToCell(); //need to differentiate between moving the pen and colour sensor
-	searchEnds();
+	//moveToCell(); //need to differentiate between moving the pen and colour sensor
+	//searchEnds();
 	readMaze();
 	//start timer
-	handrailAlgo();
+	//handrailAlgo();
 	//end timer
 
 
 	//draw maze
-*/
+
 }
 
 void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &currentCellX, int &currentCellY) //i think we need to take a look at this
@@ -143,7 +153,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     {
     	motor[motorC] = -MOTOR_POWER;
     }
-    while(abs(nMotorEncoder[motorC] - iEncodeY < abs(dEncodeY))
+    while(abs(nMotorEncoder[motorC] - iEncodeY) < abs(dEncodeY))
     {}
     motor[motorC] = 0;
     //update the current cell coordinate
@@ -214,6 +224,11 @@ void initialize()
 	wait1Msec(10);
 	SensorMode[S1] = modeEV3Color_Color;
 	wait1Msec(10);
+	const int MTR_ENC_LIMIT_MAG=650;
+	const int XMOTOR_CONFIG_PWR=10;
+	const int YMOTOR_CONFIG_PWR=100;
+	SensorType[S1]=sensorEV3_Color;
+	SensorType[S2]=sensorEV3_Touch;
 	nMotorEncoder[motorA]=nMotorEncoder[motorB]=nMotorEncoder[motorC]=nMotorEncoder[motorD]=0;
 
 	//fills out 2d bit array with default value of 0
@@ -236,28 +251,31 @@ void initialize()
 	while(!getButtonPress(buttonEnter))
 	{
 		displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+		displayString(9, "Motor Encoder value =%d", nMotorEncoder[motorA]);
 		while(getButtonPress(buttonUp))
 		{
 			button_Pressed=true;
-			motor[motorD]=MOTOR_CONFIG_PWR;
+			motor[motorC]=YMOTOR_CONFIG_PWR;
 			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+			displayString(9, "Motor Encoder value =%d", nMotorEncoder[motorA]);
 		}
 			while(getButtonPress(buttonDown))
 		{
 			button_Pressed=true;
-			motor[motorD]=-MOTOR_CONFIG_PWR;
+			motor[motorC]=-YMOTOR_CONFIG_PWR;
 			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
+			displayString(9, "Motor Encoder value =%d", nMotorEncoder[motorA]);
 		}
 			while(getButtonPress(buttonLeft))
 		{
 			button_Pressed=true;
-			motor[motorA]=motor[motorC]=-MOTOR_CONFIG_PWR;
+			motor[motorA]=motor[motorB]=-XMOTOR_CONFIG_PWR;
 			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
 		}
 			while(getButtonPress(buttonRight))
 		{
 			button_Pressed=true;
-			motor[motorA]=motor[motorC]=MOTOR_CONFIG_PWR;
+			motor[motorA]=motor[motorB]=XMOTOR_CONFIG_PWR;
 			displayString(8,"Clr Sensor Value = %d", SensorValue[S1]);
 		}
 		if(button_Pressed)
