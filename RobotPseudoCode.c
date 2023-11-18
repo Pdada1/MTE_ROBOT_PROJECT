@@ -36,7 +36,7 @@ int mazeMap[MAZE_R][MAZE_C];
 
 task main()
 {
-	/*
+
 	//order of function initializations
 	initialize();
 	//moveToCell(); //need to differentiate between moving the pen and colour sensor
@@ -81,43 +81,43 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 
 void readMaze()
 {
-	for (int col = 0; col < MAZE_C; col++)
-    for (int row = 0; row < MAZE_R; row++)
+		int col = 0, row = 0;
+    for (row = 0; row < MAZE_R; row++)
     {
         //scans from the left to the right at even rows
         if(row % 2 == 0)
         {
-            for (int col = 0; col < MAZE_C; col++)
+            for (col = 0; col < MAZE_C; col++)
             {
-                //assume colour sensor is S3; if colour == black
+                //assume colour sensor is S3; if colour == white
                 if(SensorValue[S1] == 6)
-                {
-                    mazeMap[row][col] = -1;
-                }
-                    //the colour is white
-                else
                 {
                     mazeMap[row][col] = 0;
                 }
+                    //the colour is black
+                else
+                {
+                    mazeMap[row][col] = -1;
+                }
+                //move one cell to the right
+            		moveToCell(col, row, col + 1, row);
             }
-            //move one cell to the right
-            moveToCell(col, row, col + 1, row);
         }
         //scans from the right to the left at even rows
         else
         {
-            for (int col = MAZE_C - 1; col >= 0 ; col--)
+            for (col = MAZE_C - 1; col >= 0 ; col--)
             {
-                if(SensorValue[S1] == -1)
-                {
-                    mazeMap[row][col] = -1;
-                }
-                else
+                if(SensorValue[S1] == 6)
                 {
                     mazeMap[row][col] = 0;
                 }
+                else
+                {
+                    mazeMap[row][col] = -1;
+                }
+                moveToCell(col, row, col - 1, row);
             }
-            moveToCell(col, row, col - 1, row);
         }
         moveToCell(col, row, col, row + 1);
     }
