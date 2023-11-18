@@ -53,17 +53,17 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 
 	if(SensorValue[S1] == 6) //if we detect the white start tile
 		{
-			startCellX = 0; //in the 2nd last colomn from the left
-			startCellY = 1; //in the 1st row from the top
-			goalCellX = MAZE_C-1; //in the 1st column from the right
-			goalCellY = MAZE_R-2; //in the 2nd row from the bottom
-		}
-	else
-		{
 			startCellX = MAZE_C-2; //in the 1st colomn from the left
 			startCellY = 0; //in the 2nd row from the top
 			goalCellX = 1; //in the 1st colomn from the right
 			goalCellY = MAZE_R-1; //in the 2nd row fron the bottom
+		}
+	else
+		{
+			startCellX = 0; //in the 2nd last colomn from the left
+			startCellY = 1; //in the 1st row from the top
+			goalCellX = MAZE_C-1; //in the 1st column from the right
+			goalCellY = MAZE_R-2; //in the 2nd row from the bottom
 		}
 	//returns back to the initial position
 	moveToCell(currentCellX, currentCellY, 0, 0);
