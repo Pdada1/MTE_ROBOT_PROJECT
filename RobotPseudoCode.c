@@ -29,7 +29,7 @@ void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 41, MAZE_C = 41, MOTOR_POWER = 30, CELL_TO_ENCODER = 1, VALID_CELL = 1;
+const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 1;
 int mazeMap[MAZE_R][MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
@@ -39,7 +39,6 @@ task main()
 
 	//order of function initializations
 	initialize();
-	//moveToCell(); //need to differentiate between moving the pen and colour sensor
 	//searchEnds();
 	readMaze();
 	//start timer
@@ -81,13 +80,13 @@ void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY
 
 void readMaze()
 {
-		int col = 0, row = 0;
-    for (row = 0; row < MAZE_R; row++)
+		int end_col = 0;
+    for (int row = 0; row < MAZE_R;)
     {
         //scans from the left to the right at even rows
         if(row % 2 == 0)
         {
-            for (col = 0; col < MAZE_C; col++)
+            for (int col = 0; col < MAZE_C;)
             {
                 //assume colour sensor is S3; if colour == white
                 if(SensorValue[S1] == 6)
@@ -99,14 +98,18 @@ void readMaze()
                 {
                     mazeMap[row][col] = -1;
                 }
+
+                displayString(col, "%d ",SensorValue[S1]);
                 //move one cell to the right
             		moveToCell(col, row, col + 1, row);
             }
+            end_col = MAZE_C - 1;
         }
         //scans from the right to the left at even rows
+
         else
         {
-            for (col = MAZE_C - 1; col >= 0 ; col--)
+            for (int col = MAZE_C - 1; col >= 0 ;)
             {
                 if(SensorValue[S1] == 6)
                 {
@@ -116,10 +119,12 @@ void readMaze()
                 {
                     mazeMap[row][col] = -1;
                 }
+                displayString(col, "%d ",SensorValue[S1]);
                 moveToCell(col, row, col - 1, row);
             }
+            end_col = 0;
         }
-        moveToCell(col, row, col, row + 1);
+        moveToCell(end_col, row, end_col, row + 1);
     }
     return;
 }
@@ -130,14 +135,14 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER;
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.35;
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*55;
     //move the x distance
     if (currentCellX > nextCellX)
     {
     	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
     }
-    else
+    else if (currentCellX < nextCellX)
     {
     	motor[motorA] = motor[motorB] = -MOTOR_POWER;
     }
@@ -147,11 +152,11 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     //move the y distance
     if (currentCellY > nextCellY)
     {
-    	motor[motorC] = MOTOR_POWER;
+    	motor[motorC] = MOTOR_POWER_y;
     }
-    else
+    else if (currentCellY < nextCellY)
     {
-    	motor[motorC] = -MOTOR_POWER;
+    	motor[motorC] = -MOTOR_POWER_y;
     }
     while(abs(nMotorEncoder[motorC] - iEncodeY) < abs(dEncodeY))
     {}
@@ -285,6 +290,7 @@ void initialize()
 		}
 
 	}
+	nMotorEncoder[motorA]=nMotorEncoder[motorB]=nMotorEncoder[motorC]=nMotorEncoder[motorD]=0;
 	return;
 }
 
