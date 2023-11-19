@@ -39,10 +39,8 @@ task main()
 
 	//order of function initializations
 	initialize();
-	int x=0, y=0;
-	moveToCell(x,y,8,8);
 	//searchEnds();
-	//readMaze();
+	readMaze();
 	//start timer
 	//handrailAlgo();
 	//end timer
@@ -104,7 +102,6 @@ void readMaze()
                 displayString(col, "%d ",SensorValue[S1]);
                 //move one cell to the right
             		moveToCell(col, row, col + 1, row);
-            		wait1Msec(300);
             }
             end_col = MAZE_C - 1;
         }
@@ -124,12 +121,10 @@ void readMaze()
                 }
                 displayString(col, "%d ",SensorValue[S1]);
                 moveToCell(col, row, col - 1, row);
-               	wait1Msec(300);
             }
             end_col = 0;
         }
         moveToCell(end_col, row, end_col, row + 1);
-        wait10Msec(500);
     }
     return;
 }
@@ -140,8 +135,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.50;
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*58;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.35;
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*55;
     //move the x distance
     if (currentCellX > nextCellX)
     {
