@@ -9,7 +9,7 @@ Touch Sensor Port: S2
 
 
 void handrailAlgo(); //pain
-//void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene) * Surprise, we don't actually need this - sorry :(
+//void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
@@ -129,7 +129,7 @@ void readMaze()
             end_col = 0;
         }
         moveToCell(end_col, row, end_col, row + 1);
-        wait10Msec(500);
+        wait1Msec(500);
     }
     return;
 }
@@ -157,11 +157,11 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     //move the y distance
     if (currentCellY > nextCellY)
     {
-    	motor[motorC] = MOTOR_POWER_y;
+    	motor[motorC] = MOTOR_POWER_Y;
     }
     else if (currentCellY < nextCellY)
     {
-    	motor[motorC] = -MOTOR_POWER_y;
+    	motor[motorC] = -MOTOR_POWER_Y;
     }
     while(abs(nMotorEncoder[motorC] - iEncodeY) < abs(dEncodeY))
     {}
