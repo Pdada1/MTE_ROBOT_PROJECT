@@ -140,8 +140,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.50;
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*58;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.83871;//magic number
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*96.66;
     //move the x distance
     if (currentCellX > nextCellX)
     {
