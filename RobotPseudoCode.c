@@ -4,8 +4,13 @@ Motors for y direction: C
 Motors for pen: D
 Color Sensor Port: S1
 Touch Sensor Port: S2
-*/
+Passage=0
+Wall=-1
+Traversed Passage =1
+if we double traverse set back to 0
+Using left hand rule for the algo
 
+*/
 
 
 void handrailAlgo(); //pain
@@ -29,7 +34,7 @@ void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 1;
+const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 0;
 int mazeMap[MAZE_R][MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
@@ -52,32 +57,9 @@ task main()
 
 }
 
-void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &currentCellX, int &currentCellY) //i think we need to take a look at this
+bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
 {
-	//only scan the upper row from left to right
-	//assume we start at the upper left corner and the colour sensor is already at the 1st tile
-
-	nMotorEncoder[motorA] = 0;
-
-	//move directly to the 2nd last colomn from the right
-	moveToCell(currentCellX, currentCellY, 0, 1); //move one down from starting
-
-	if(SensorValue[S1] == 6) //if we detect the white start tile
-		{
-			startCellX = 0; //in the 2nd last colomn from the left
-			startCellY = 1; //in the 1st row from the top
-			goalCellX = MAZE_C-1; //in the 1st column from the right
-			goalCellY = MAZE_R-2; //in the 2nd row from the bottom
-		}
-	else
-		{
-			startCellX = MAZE_C-2; //in the 1st colomn from the left
-			startCellY = 0; //in the 2nd row from the top
-			goalCellX = 1; //in the 1st colomn from the right
-			goalCellY = MAZE_R-1; //in the 2nd row fron the bottom
-		}
-	//returns back to the initial position
-	moveToCell(currentCellX, currentCellY, 0, 0);
+	return (mazeMap[1][0]==0);
 }
 
 void readMaze()
@@ -128,8 +110,12 @@ void readMaze()
             }
             end_col = 0;
         }
-        moveToCell(end_col, row, end_col, row + 1);
-        wait1Msec(5000);
+
+        if(row != MAZE_C - 1)
+        {
+        	moveToCell(end_col, row, end_col, row + 1);
+        }
+        wait1Msec(500);
     }
     return;
 }
@@ -140,8 +126,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.55;//magic number
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*61;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.55//1.55;constants for first size of maze
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*140//61;
     //move the x distance
     if (currentCellX > nextCellX)
     {
@@ -181,7 +167,22 @@ void handrailAlgo()
 	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0;
 
 	//search mazeMap for start and end points
-	//searchEnds(startCellX, startCellY, goalCellX, goalCellY);
+	bool top_left=searchEnds();
+	if(top_left)
+	{
+		startCellX=1;
+		startCellY=0;
+		goalCellX=MAZE_R-2;
+		goalCellY=MAZE_C-1;
+	}
+	else
+	{
+		startCellX=MAZE_R-1;
+		startCellY=1;
+		goalCellX=0;
+		goalCellY=MAZE_C-2;
+	}
+
 	char dir[4] = {'N', 'E', 'S', 'W'};
 	/*
 	E is [row][col-1]
@@ -193,7 +194,7 @@ void handrailAlgo()
 	*/
 
 	//pick a start and end (doesnt matter tbh)
-	int facingDir = 0; //Tells us which direction we most recently went
+	//int facingDir = 0; //Tells us which direction we most recently went//might not need
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
 		//makeNextMove(findNextMove())
@@ -299,22 +300,23 @@ void initialize()
 	return;
 }
 
-bool isValidMove(int currentCellX, int currentCellY, int facingDir)
+
+bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to flip params
 {
 	int count = 1;//because constants don't work here??
-	if(facingDir == 0 && currentCellY - 1 > 0 && abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
+	if(facingDir == 0 && /*currentCellY - 1 >= 0*/ && abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
 	{
 		return true;
 	}
-	else if(facingDir == 1 && currentCellX + 1 < MAZE_C - 1 && mazeMap[currentCellY][currentCellX + count] == VALID_CELL)
+	else if(facingDir == 1 && /*currentCellX + 1 < MAZE_C - 1 &&*/ mazeMap[currentCellY][currentCellX + count] == VALID_CELL)
 	{
 		return true;
 	}
-	else if(facingDir == 2 && currentCellY + 1 < MAZE_R - 1 && mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
+	else if(facingDir == 2 && /*currentCellY + 1 < MAZE_R - 1*/ && mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
 	{
 		return true;
 	}
-	else if(facingDir == 3 && currentCellX - 1 > 0 && mazeMap[currentCellY][currentCellX - count] == VALID_CELL)
+	else if(facingDir == 3 && /*currentCellX - 1 > 0 &&*/ mazeMap[currentCellY][currentCellX - count] == VALID_CELL)
 	{
 		return true;
 	}
@@ -325,6 +327,11 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 	for (int attempts = 0; attempts < 4; attempts++)
+	{//assuming this is using left hand rule
+int findNextMove(int currentCellX, int currentCellY, int facingDir)
+{
+	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
+	for (int attempts = 0; attempts < 4; attempts++)//only 3 checks needed since otherwise go back
 	{
 		if(isValidMove(currentCellX, currentCellY, facingDir))
 		{
@@ -342,22 +349,22 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
 	if (nextDir == 0) //if we need to go up
 	{
-		mazeMap[currentCellY-count][currentCellX] = 0;
+		mazeMap[currentCellY-count][currentCellX] = 1;
 		currentCellY -= 1;
 	}
 	else if (nextDir == 1) //if we need to go right
 	{
-		mazeMap[currentCellY][currentCellX+count] = 0;
+		mazeMap[currentCellY][currentCellX+count] = 1;
 		currentCellX += 1;
 	}
 	else if (nextDir == 2) //if we need to go down
 	{
-		mazeMap[currentCellY+count][currentCellX] = 0;
+		mazeMap[currentCellY+count][currentCellX] = 1;
 		currentCellY += 1;
 	}
 	else if (nextDir == 3) //if we need to go left
 	{
-		mazeMap[currentCellY][currentCellX-count] = 0;
+		mazeMap[currentCellY][currentCellX-count] = 1;
 		currentCellX -= 1;
 	}
 }
