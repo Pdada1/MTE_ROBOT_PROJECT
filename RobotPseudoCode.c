@@ -40,9 +40,9 @@ task main()
 	//order of function initializations
 	initialize();
 	int x=0, y=0;
-	moveToCell(x,y,8,8);
+	//moveToCell(x,y,8,8);
 	//searchEnds();
-	//readMaze();
+	readMaze();
 	//start timer
 	//handrailAlgo();
 	//end timer
@@ -88,7 +88,7 @@ void readMaze()
         //scans from the left to the right at even rows
         if(row % 2 == 0)
         {
-            for (int col = 0; col < MAZE_C;)
+            for (int col = 0; col < MAZE_C-1;)
             {
                 //assume colour sensor is S3; if colour == white
                 if(SensorValue[S1] == 6)
@@ -112,7 +112,7 @@ void readMaze()
 
         else
         {
-            for (int col = MAZE_C - 1; col >= 0 ;)
+            for (int col = MAZE_C - 1; col > 0 ;)
             {
                 if(SensorValue[S1] == 6)
                 {
@@ -129,7 +129,7 @@ void readMaze()
             end_col = 0;
         }
         moveToCell(end_col, row, end_col, row + 1);
-        wait1Msec(500);
+        wait1Msec(5000);
     }
     return;
 }
@@ -140,8 +140,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.70;//magic number
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*58;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*1.55;//magic number
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*61;
     //move the x distance
     if (currentCellX > nextCellX)
     {
