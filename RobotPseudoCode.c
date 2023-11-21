@@ -172,7 +172,7 @@ void handrailAlgo()
 	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0;
 
 	//search mazeMap for start and end points
-	bool top_left=searchEnds();
+	bool top_left = searchEnds();
 	if(top_left)
 	{
 		startCellX=1;
@@ -375,6 +375,74 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 	}
 }
 
+// y is the rows, x is the cols
+bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
+{
+    int frontCellX = currentCellX;
+    int frontCellY = currentCellY;
+
+    // check if the gird in the front is 1
+    // dir 0 is up, 1 is right, 2 is down, 3 is left
+    bool frontIs1;
+    if(goalCellValue(frontCellX, frontCellY, facingDir) == 1)
+    {
+        frontIs1 = true;
+    }
+    // now the current x and current y is the one in the front
+    bool zero;
+    // check if there's an empty direction with 0 beside current x and y
+    for(int i = 0; i < 4; i++)
+    {
+        // not checking the back cell
+        if(i != 2)
+        {
+            // check left, front, and right
+            if(goalCellValue(frontCellX, frontCellY, (facingDir + i) % 4 ) == 0)
+            {
+                zero = true;
+            }
+        }
+    }
+    // check front left and front right
+    // move one to the front again
+    makeNextMove(frontCellX, frontCellY, facingDir);
+    if(goalCellValue(frontCellX, frontCellY, (facingDir + 1) % 4 ) == 0
+       || goalCellValue(frontCellX, frontCellY, (facingDir + 3) % 4 ) == 0)
+    {
+        zero = true;
+    }
+
+    // check if both conditions are true
+    if(frontIsOne && zero)
+    {
+        return true;
+    }
+    return false;
+}
+
+int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
+{
+    if (nextDir == 0) //check the north cell
+    {
+        currentCellY -= 1;
+        return mazeMap[currentCellY-count][currentCellX];
+    }
+    else if (nextDir == 1) //check the east cell
+    {
+        currentCellX += 1;
+        return mazeMap[currentCellY][currentCellX+count];
+    }
+    else if (nextDir == 2) //check the south cell
+    {
+        currentCellY -= 1;
+        return mazeMap[currentCellY+count][currentCellX];
+    }
+    else // if (nextDir == 3) check the west cell
+    {
+        currentCellX -= 1;
+        return mazeMap[currentCellY][currentCellX-count];
+    }
+}
 
 void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 {
