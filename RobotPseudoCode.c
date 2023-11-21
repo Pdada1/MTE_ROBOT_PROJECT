@@ -64,7 +64,7 @@ bool searchEnds() //changed so that it checks the array and not moving the actua
 
 void readMaze()
 {
-		int end_col = 0;
+    int end_col = 0;
     for (int row = 0; row < MAZE_R;)
     {
         //scans from the left to the right at even rows
@@ -114,6 +114,10 @@ void readMaze()
         if(row != MAZE_C - 1)
         {
         	moveToCell(end_col, row, end_col, row + 1);
+        }
+        else
+        {
+            row++;
         }
         wait1Msec(500);
     }
