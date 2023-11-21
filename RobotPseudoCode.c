@@ -36,6 +36,7 @@ void breadthFirstSolve(); //genuine suffering
 
 const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 0;
 int mazeMap[MAZE_R][MAZE_C];
+string penDirection[MAZE_R*MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
 
@@ -355,6 +356,7 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 	{
 		mazeMap[currentCellY-count][currentCellX] = 1;
 		currentCellY -= 1;
+
 	}
 	else if (nextDir == 1) //if we need to go right
 	{
@@ -374,9 +376,35 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 }
 
 
-void storeNextMove(int currentCellX, int currentCellY, int facingDir)
+void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 {
-
+    //loop runs while the pen has not reached the goal x and y cells
+    //sets the current cell to the start cell
+    int currentCellX = startCellX;
+    int currentCellY = startCellY;
+    while (currentCellX != goalCellX && currentCellY != goalCellY)
+    {
+        if (mazeMap[currentCellX][currentCellY+1] == 1) //if the top cell is white
+        {
+            moveToCell(currentCellX, currentCellY, currentCellX, currentCellY+1);
+            currentCellY+= 1;
+        }
+        else if (mazeMap[currentCellX+1][currentCellY] == 1) //if the right cell is white
+        {
+            moveToCell(currentCellX, currentCellY, currentCellX+1, currentCellY);
+            currentCellX+= 1;
+        }
+        else if (mazeMap[currentCellX][currentCellY-1] == 1) //if the bottom cell is white
+        {
+            moveToCell(currentCellX, currentCellY, currentCellX, currentCellY-1);
+            currentCellY-= 1;
+        }
+        else if (mazeMap[currentCellX-1][currentCellY] == 1) //if the left cell is white
+        {
+            moveToCell(currentCellX, currentCellY, currentCellX-1, currentCellY);
+            currentCellX-= 1;
+        }
+    }
 
 
 }
