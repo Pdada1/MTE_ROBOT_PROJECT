@@ -96,7 +96,7 @@ void readMaze()
         {
             for (int col = MAZE_C - 1; col > 0 ;)
             {
-                if(SensorValue[S1] == 6)
+                if(SensorValue[S1] > 15 /*== 6*/)
                 {
                     mazeMap[row][col] = 0;
                 }
@@ -237,7 +237,7 @@ void initialize()
 	wait1Msec(10);
 	SensorType[S2] = sensorEV3_Touch;
 	wait1Msec(10);
-	SensorMode[S1] = modeEV3Color_Color;
+	SensorMode[S1] = modeEV3Color_Reflected;
 	wait1Msec(10);
 	const int MTR_ENC_LIMIT_MAG=650;
 	const int XMOTOR_CONFIG_PWR=10;
