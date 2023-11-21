@@ -304,7 +304,7 @@ void initialize()
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to flip params
 {
 	int count = 1;//because constants don't work here??
-	if(facingDir == 0 && /*currentCellY - 1 >= 0*/ && abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
+	if(facingDir == 0 && /*currentCellY - 1 >= 0*/ abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
 	{
 		return true;
 	}
@@ -312,7 +312,7 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to fli
 	{
 		return true;
 	}
-	else if(facingDir == 2 && /*currentCellY + 1 < MAZE_R - 1*/ && mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
+	else if(facingDir == 2 && /*currentCellY + 1 < MAZE_R - 1*/  mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
 	{
 		return true;
 	}
@@ -328,9 +328,8 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 	for (int attempts = 0; attempts < 4; attempts++)
 	{//assuming this is using left hand rule
-int findNextMove(int currentCellX, int currentCellY, int facingDir)
-{
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
+}
 	for (int attempts = 0; attempts < 4; attempts++)//only 3 checks needed since otherwise go back
 	{
 		if(isValidMove(currentCellX, currentCellY, facingDir))
@@ -341,6 +340,7 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 	}
 	return -1;
 }
+
 
 void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
