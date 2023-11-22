@@ -27,6 +27,8 @@ void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav
 
 void swapToPen(); //move pen tip to (0, 0) and then put pen down
 
+void swapToCSensor();
+
 void drawMaze();
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
@@ -53,6 +55,8 @@ task main()
 	//handrailAlgo();
 	//end timer
 	swapToPen();
+	wait1Msec(500);
+	swapToCSensor();
 
 	//draw maze
 
@@ -446,7 +450,7 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
 
 void swapToPen()
 {
-	int const MoveX=3700;
+	int const MoveX=4700;
 	int const MoveY=0;
 	int const currentX=nMotorEncoder[motorC];
 	int const currentY=nMotorEncoder[motorA];
@@ -457,6 +461,24 @@ void swapToPen()
 	{}
 	motor[motorA]=motor[motorB]=0;
 		motor[motorC]=-100;
+	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
+	{}
+	motor[motorC]=0;
+}
+
+void swapToCSensor()
+{
+	int const MoveX=4700;
+	int const MoveY=0;
+	int const currentX=nMotorEncoder[motorC];
+	int const currentY=nMotorEncoder[motorA];
+	motor[motorA]=motor[motorB]=motor[motorC]=0;
+	motor[motorA]=motor[motorB]=10;
+	eraseDisplay();
+	while(abs(nMotorEncoder[motorA]-currentY)<MoveY)
+	{}
+	motor[motorA]=motor[motorB]=0;
+		motor[motorC]=100;
 	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
 	{}
 	motor[motorC]=0;
