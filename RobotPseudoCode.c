@@ -67,17 +67,18 @@ bool searchEnds() //changed so that it checks the array and not moving the actua
 }
 
 void readMaze()
-{
+{		const int LIGHT_THRESHOLD=25;
+		eraseDisplay()
     int end_col = 0;
     for (int row = 0; row < MAZE_R;)
     {
         //scans from the left to the right at even rows
         if(row % 2 == 0)
         {
-            for (int col = 0; col < MAZE_C-1;)
+            for (int col = 0; col < MAZE_C;)
             {
                 //assume colour sensor is S3; if colour == white
-                if(SensorValue[S1] == 6)
+                if(SensorValue[S1] >LIGHT_THRESHOLD)
                 {
                     mazeMap[row][col] = 0;
                 }
@@ -87,9 +88,14 @@ void readMaze()
                     mazeMap[row][col] = -1;
                 }
 
-                displayString(col, "%d ",SensorValue[S1]);
+                displayString(col+2, "%d ",SensorValue[S1]);
                 //move one cell to the right
-            		moveToCell(col, row, col + 1, row);
+           			if(col!=MAZE_C-1)
+            			moveToCell(col, row, col + 1, row);
+            		else
+            		{
+            			col++;
+            		}
             		wait1Msec(300);
             }
             end_col = MAZE_C - 1;
@@ -98,9 +104,9 @@ void readMaze()
 
         else
         {
-            for (int col = MAZE_C - 1; col > 0 ;)
+            for (int col = MAZE_C - 1; col >=0 ;)
             {
-                if(SensorValue[S1] > 15 /*== 6*/)
+                if(SensorValue[S1] > LIGHT_THRESHOLD)
                 {
                     mazeMap[row][col] = 0;
                 }
@@ -108,8 +114,13 @@ void readMaze()
                 {
                     mazeMap[row][col] = -1;
                 }
-                displayString(col, "%d ",SensorValue[S1]);
-                moveToCell(col, row, col - 1, row);
+                displayString(col+2, "%d ",SensorValue[S1]);
+                if(col!=0)
+                	moveToCell(col, row, col - 1, row);
+               	else
+               	{
+               		col--;
+               	}
                	wait1Msec(300);
             }
             end_col = 0;
@@ -134,7 +145,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.55//1.55;constants for first size of maze
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.53//1.55;constants for first size of maze
     int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*140//61;
     //move the x distance
     if (currentCellX > nextCellX)
