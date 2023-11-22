@@ -9,7 +9,6 @@ Wall=-1
 Traversed Passage =1
 if we double traverse set back to 0
 Using left hand rule for the algo
-
 */
 
 
@@ -51,12 +50,15 @@ task main()
 	initialize();
 	//moveToCell(x,y,8,8);
 	//searchEnds();
+	time1[T1]=0;
 	readMaze();
+	int maze_time=time1[T1];
 	//start timer
 	//handrailAlgo();
-	//end timer
+	int algo_time=time1[T1]-maze_time;
 	//draw maze
-
+	int total_time=time1[T1];
+	int draw_time=total_time-maze_time-algo_time;
 }
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
@@ -532,7 +534,6 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
     //the current cell has reached the goal cells
 }
 
-}
 
 bool checkBlank()
 {
