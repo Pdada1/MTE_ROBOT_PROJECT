@@ -372,21 +372,20 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 	}
 }
 
-int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
+int goalCellValue (int & currentCellX, int & currentCellY, int facingDir)
 {
 	int count=0;
-	int nextDir=0;//to be checked with ximena tmrw
-    if (nextDir == 0) //check the north cell
+    if (facingDir == 0) //check the north cell
     {
         currentCellY -= 1;
         return mazeMap[currentCellY-count][currentCellX];
     }
-    else if (nextDir == 1) //check the east cell
+    else if (facingDir == 1) //check the east cell
     {
         currentCellX += 1;
         return mazeMap[currentCellY][currentCellX+count];
     }
-    else if (nextDir == 2) //check the south cell
+    else if (facingDir == 2) //check the south cell
     {
         currentCellY -= 1;
         return mazeMap[currentCellY+count][currentCellX];
@@ -398,8 +397,7 @@ int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
     }
 }
 
-// y is the rows, x is the cols
-bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
+bool oldPath(int currentCellX, int currentCellY, int facingDir)
 {
     int frontCellX = currentCellX;
     int frontCellY = currentCellY;
@@ -409,9 +407,15 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
     bool frontIs1;
     if(goalCellValue(frontCellX, frontCellY, facingDir) == 1)
     {
-        frontIs1 = true;
+        return true;
     }
-    // now the current x and current y is the one in the front
+    return false;
+}
+
+// y is the rows, x is the cols
+// check whether current spot is at the junction
+bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
+{
     bool zero;
     // check if there's an empty direction with 0 beside current x and y
     for(int i = 0; i < 4; i++)
@@ -428,6 +432,8 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
     }
     // check front left and front right
     // move one to the front again
+    int frontCellX = currentCellX;
+    int frontCellY = currentCellY;
     makeNextMove(frontCellX, frontCellY, facingDir);
     if(goalCellValue(frontCellX, frontCellY, (facingDir + 1) % 4 ) == 0
        || goalCellValue(frontCellX, frontCellY, (facingDir + 3) % 4 ) == 0)
@@ -436,7 +442,7 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
     }
 
     // check if both conditions are true
-    if(frontIs1 && zero)
+    if(oldPath(currentCellX, currentCellY, facingDir) && zero)
     {
         return true;
     }
