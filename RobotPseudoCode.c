@@ -60,7 +60,7 @@ task main()
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
 {
-	return (mazeMap[1][0]==0);
+	return (mazeMap[0][1]==0);
 }
 
 void readMaze()
@@ -171,21 +171,43 @@ void handrailAlgo()
 	//Solve Maze while recording movements
 	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0;
 
-	//search mazeMap for start and end points
+	//set ends to black
+    for (int row = 0; row < MAZE_R; row++)
+    {
+        if (row == 0 || row == MAZE_R-1)
+        {
+            for (int col = 0; col < MAZE_C; col++)
+            {
+                mazeMap[row][col] = -1;
+            }
+        }
+        else
+        {
+            mazeMap[row][0]= -1;
+            mazeMap[row][MAZE_C-1]= -1;
+        }
+    }
+
+    //search mazeMap for start and end points
 	bool top_left = searchEnds();
 	if(top_left)
 	{
-		startCellX=1;
-		startCellY=0;
-		goalCellX=MAZE_R-2;
-		goalCellY=MAZE_C-1;
+		startCellX=0;
+		startCellY=1;
+        mazeMap[startCellX][startCellY] = 0;
+		goalCellX=MAZE_R-1;
+		goalCellY=MAZE_C-2;
+        mazeMap[goalCellX][goalCellY]=0;
+
 	}
 	else
 	{
-		startCellX=MAZE_R-1;
-		startCellY=1;
-		goalCellX=0;
-		goalCellY=MAZE_C-2;
+		startCellX=MAZE_R-2;
+		startCellY=0;
+        mazeMap[startCellX][startCellY] = 0;
+		goalCellX=1;
+		goalCellY=MAZE_C-1;
+        mazeMap[goalCellX][goalCellY]=0;
 	}
 
 	char dir[4] = {'N', 'E', 'S', 'W'};
@@ -470,6 +492,6 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
     }
     //since move to cell moves AND updates the current cell, the loop will keep on running until
     //the current cell has reached the goal cells
-
-
 }
+
+
