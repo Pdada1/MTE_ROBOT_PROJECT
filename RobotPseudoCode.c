@@ -30,6 +30,8 @@ void swapToPen(); //move pen tip to (0, 0) and then put pen down
 void swapToCSensor();
 
 void drawMaze();
+
+void checkBlank();
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -47,17 +49,12 @@ task main()
 
 	//order of function initializations
 	initialize();
-	int x=0, y=0;
 	//moveToCell(x,y,8,8);
 	//searchEnds();
-	//readMaze();
+	readMaze();
 	//start timer
 	//handrailAlgo();
 	//end timer
-	swapToPen();
-	wait1Msec(500);
-	swapToCSensor();
-
 	//draw maze
 
 }
@@ -513,4 +510,9 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
     //the current cell has reached the goal cells
 
 
+}
+
+bool checkBlank()
+{
+	return (mazeMap[0][1]==mazeMap[1][0]);
 }
