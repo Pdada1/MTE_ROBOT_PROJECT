@@ -346,6 +346,30 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 	return -1;
 }
 
+int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
+{
+		int count=1;
+    if (facingDir == 0) //check the north cell
+    {
+        currentCellY -= 1;
+        return mazeMap[currentCellY-count][currentCellX];
+    }
+    else if (facingDir == 1) //check the east cell
+    {
+        currentCellX += 1;
+        return mazeMap[currentCellY][currentCellX+count];
+    }
+    else if (facingDir == 2) //check the south cell
+    {
+        currentCellY -= 1;
+        return mazeMap[currentCellY+count][currentCellX];
+    }
+    else // if (nextDir == 3) check the west cell
+    {
+        currentCellX -= 1;
+        return mazeMap[currentCellY][currentCellX-count];
+    }
+}
 
 void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
@@ -413,36 +437,34 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
     }
 
     // check if both conditions are true
-    if(frontIsOne && zero)
+    if(frontIs1 && zero)
     {
         return true;
     }
     return false;
 }
 
-int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
+void swapToPen()
 {
-    if (nextDir == 0) //check the north cell
-    {
-        currentCellY -= 1;
-        return mazeMap[currentCellY-count][currentCellX];
-    }
-    else if (nextDir == 1) //check the east cell
-    {
-        currentCellX += 1;
-        return mazeMap[currentCellY][currentCellX+count];
-    }
-    else if (nextDir == 2) //check the south cell
-    {
-        currentCellY -= 1;
-        return mazeMap[currentCellY+count][currentCellX];
-    }
-    else // if (nextDir == 3) check the west cell
-    {
-        currentCellX -= 1;
-        return mazeMap[currentCellY][currentCellX-count];
-    }
+		int const MoveX=3300;
+	int const MoveY=135;
+	int const currentX=nMotorEncoder[motorC];
+	int const currentY=nMotorEncoder[motorA];
+	motor[motorA]=motor[motorB]=motor[motorC]=0;
+	motor[motorA]=motor[motorB]=-10;
+	eraseDisplay();
+	while(abs(nMotorEncoder[motorA]-currentY)<MoveY)
+	{}
+	motor[motorA]=motor[motorB]=0;
+		motor[motorC]=-100;
+	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
+	{}
+	motor[motorC]=0;
+	motor[motorD]=-100;
+	wait1Msec(1000);
+	motor[motorD]=0;
 }
+
 
 void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 {
