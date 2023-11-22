@@ -446,7 +446,6 @@ int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
 
 void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 {
-    //loop runs while the pen has not reached the goal x and y cells
     //sets the current cell to the start cell
     int currentCellX = startCellX;
     int currentCellY = startCellY;
@@ -455,24 +454,22 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
         if (mazeMap[currentCellX][currentCellY+1] == 1) //if the top cell is white
         {
             moveToCell(currentCellX, currentCellY, currentCellX, currentCellY+1);
-            currentCellY+= 1;
         }
         else if (mazeMap[currentCellX+1][currentCellY] == 1) //if the right cell is white
         {
             moveToCell(currentCellX, currentCellY, currentCellX+1, currentCellY);
-            currentCellX+= 1;
         }
         else if (mazeMap[currentCellX][currentCellY-1] == 1) //if the bottom cell is white
         {
             moveToCell(currentCellX, currentCellY, currentCellX, currentCellY-1);
-            currentCellY-= 1;
         }
         else if (mazeMap[currentCellX-1][currentCellY] == 1) //if the left cell is white
         {
             moveToCell(currentCellX, currentCellY, currentCellX-1, currentCellY);
-            currentCellX-= 1;
         }
     }
+    //since move to cell moves AND updates the current cell, the loop will keep on running until
+    //the current cell has reached the goal cells
 
 
 }
