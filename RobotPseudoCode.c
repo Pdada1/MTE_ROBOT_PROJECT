@@ -48,11 +48,11 @@ task main()
 	int x=0, y=0;
 	//moveToCell(x,y,8,8);
 	//searchEnds();
-	readMaze();
+	//readMaze();
 	//start timer
 	//handrailAlgo();
 	//end timer
-
+	swapToPen();
 
 	//draw maze
 
@@ -446,8 +446,8 @@ bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
 
 void swapToPen()
 {
-		int const MoveX=3300;
-	int const MoveY=135;
+	int const MoveX=3700;
+	int const MoveY=0;
 	int const currentX=nMotorEncoder[motorC];
 	int const currentY=nMotorEncoder[motorA];
 	motor[motorA]=motor[motorB]=motor[motorC]=0;
@@ -460,9 +460,6 @@ void swapToPen()
 	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
 	{}
 	motor[motorC]=0;
-	motor[motorD]=-100;
-	wait1Msec(1000);
-	motor[motorD]=0;
 }
 
 
