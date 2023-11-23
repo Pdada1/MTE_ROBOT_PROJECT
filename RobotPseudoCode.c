@@ -7,29 +7,24 @@ Touch Sensor Port: S2
 Passage=0
 Wall=-1
 Traversed Passage =1
-if we double traverse set back to 0
+if we double traverse set back to -1
 Using left hand rule for the algo
 */
 
 
 void handrailLAlgo(); //pain
-//void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
-void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
-//void controlXMotors(int cells); //this is trivial, use moveToCell
-bool isValidMove(int currentCellX, int currentCellY, int facingDir); //DONE (Ash) *
+void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //(Ximena)
+bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns false if given move would go into wall(Ash, done)
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
-void readMaze(); //this is fairly straightforward, use moveToCell, white == 6, black == -1
-//update currentCell, move robot
-void initialize(); //not easy
-int findNextMove(int currentCellX, int currentCellY, int facingDir); //complete *
+void readMaze(); //iterates over maze cells and stores as array,
+void initialize(); //initializes robot
+int findNextMove(int currentCellX, int currentCellY, int facingDir); //(done)
 void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
+void modifyMaze(int const &currentCellX, int const &currentCellY);
 
-void swapToPen(); //move pen tip to (0, 0) and then put pen down
-
-void swapToCSensor();
-
+void swapToPen(); //Moves pen to colour sensor pos
+void swapToCSensor(); //Moves colour sensor to pen pos
 void drawMaze();
-
 void checkBlank();
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
@@ -37,7 +32,7 @@ void breadthFirstSolve(); //genuine suffering
 */
 
 
-const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), VALID_CELL = 0;
+const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), WALL = -1, PASSAGE = 1;
 int mazeMap[MAZE_R][MAZE_C];
 string penDirection[MAZE_R*MAZE_C];
 
@@ -278,18 +273,6 @@ void handrailAlgo()
         mazeMap[goalCellY][goalCellX]=0;
 	}
 
-	char dir[4] = {'N', 'E', 'S', 'W'};
-	/*
-	E is [row][col-1]
-	N is [row-1][col]
-	W is [row][col+1]
-	S is [row+1][col]
-
-	*check to make sure entries are valid (between 0 and 40)*
-	*/
-
-	//pick a start and end (doesnt matter tbh)
-	//int facingDir = 0; //Tells us which direction we most recently went//might not need
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
 		//makeNextMove(findNextMove())
@@ -386,19 +369,19 @@ void initialize()
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to flip params
 {
 	int count = 1;//because constants don't work here??
-	if(facingDir == 0 && /*currentCellY - 1 >= 0*/ abs(mazeMap[currentCellY - count][currentCellX]) == VALID_CELL)
+	if(facingDir == 0 && mazeMap[currentCellY - count][currentCellX]) != WALL)
 	{
 		return true;
 	}
-	else if(facingDir == 1 && /*currentCellX + 1 < MAZE_C - 1 &&*/ mazeMap[currentCellY][currentCellX + count] == VALID_CELL)
+	else if(facingDir == 1 && mazeMap[currentCellY][currentCellX + count] != WALL)
 	{
 		return true;
 	}
-	else if(facingDir == 2 && /*currentCellY + 1 < MAZE_R - 1*/  mazeMap[currentCellY + count][currentCellX] == VALID_CELL)
+	else if(facingDir == 2 && mazeMap[currentCellY + count][currentCellX] != WALL)
 	{
 		return true;
 	}
-	else if(facingDir == 3 && /*currentCellX - 1 > 0 &&*/ mazeMap[currentCellY][currentCellX - count] == VALID_CELL)
+	else if(facingDir == 3 && mazeMap[currentCellY][currentCellX - count] != WALL)
 	{
 		return true;
 	}
@@ -408,10 +391,7 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to fli
 int findNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
-	for (int attempts = 0; attempts < 4; attempts++)
-	{ //assuming this is using left hand rule
-	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
-}
+
 	for (int attempts = 0; attempts < 4; attempts++)//only 3 checks needed since otherwise go back
 	{
 		if(isValidMove(currentCellX, currentCellY, facingDir))
@@ -453,27 +433,26 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
 
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
-	int count = 1;
 	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
 	if (nextDir == 0) //if we need to go up
 	{
-		mazeMap[currentCellY-count][currentCellX] = 1;
+		modifyMaze(currentCellX, currentCellY);
 		currentCellY -= 1;
 
 	}
 	else if (nextDir == 1) //if we need to go right
 	{
-		mazeMap[currentCellY][currentCellX+count] = 1;
+		modifyMaze(currentCellX, currentCellY);
 		currentCellX += 1;
 	}
 	else if (nextDir == 2) //if we need to go down
 	{
-		mazeMap[currentCellY+count][currentCellX] = 1;
+		modifyMaze(currentCellX, currentCellY);
 		currentCellY += 1;
 	}
 	else if (nextDir == 3) //if we need to go left
 	{
-		mazeMap[currentCellY][currentCellX-count] = 1;
+		modifyMaze(currentCellX, currentCellY);
 		currentCellX -= 1;
 	}
 }
@@ -543,20 +522,20 @@ void swapToPen()
 
 void swapToCSensor()
 {
-	int const MoveX=4700;
-	int const MoveY=0;
-	int const currentX=nMotorEncoder[motorC];
-	int const currentY=nMotorEncoder[motorA];
-	motor[motorA]=motor[motorB]=motor[motorC]=0;
-	motor[motorA]=motor[motorB]=10;
+	int const MoveX = 4700;
+	int const MoveY = 0;
+	int currentX = nMotorEncoder[motorC];
+	int currentY = nMotorEncoder[motorA];
+	motor[motorA] = motor[motorB] = motor[motorC]=0;
+	motor[motorA] = motor[motorB] = 10;
 	eraseDisplay();
-	while(abs(nMotorEncoder[motorA]-currentY)<MoveY)
+	while(abs(nMotorEncoder[motorA] - currentY) < MoveY)
 	{}
-	motor[motorA]=motor[motorB]=0;
-		motor[motorC]=100;
-	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
+	motor[motorA] = motor[motorB] = 0;
+		motor[motorC] = 100;
+	while(abs(nMotorEncoder[motorC] - currentX) < MoveX)
 	{}
-	motor[motorC]=0;
+	motor[motorC] = 0;
 }
 
 
@@ -592,4 +571,16 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 bool checkBlank()
 {
 	return (mazeMap[0][1]==mazeMap[1][0]);
+}
+
+void modifyMazeMap(int currentCellX, int currentCellY)
+{
+	if (mazeMap[currentCellY][currentCellX] == 0 || junctionCheck(currentCellX, currentCellY));
+		{
+			mazeMap[currentCellY][currentCellX] = 1;
+		}
+		else
+		{
+			mazeMap[currentCellY][currentCellX] = -1;
+		}
 }
