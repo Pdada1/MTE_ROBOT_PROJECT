@@ -217,18 +217,11 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
         while(nMotorEncoder[motorA] < nextCllX*137*CELL_TO_ENCODER)
         {}
     }
-// call correct encoder
     motor[motorC] = 0;
     //update the current cell coordinate
     currentCellX = nextCellX;
     currentCellY = nextCellY;
     return;
-}
-
-
-void correctEncoder()
-{
-
 }
 
 void handrailAlgo()
@@ -425,7 +418,7 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 
 bool isValidMove(int currentCellX, int currentCellY, int facingDir) {
     int count = 1;//because constants don't work here??
-    if (facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - count][currentCellX] == VALID_CELL)
+    if (facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - count][currentCellX] == VALID_CELL) // VALID_CELL
 }
 
 int goalCellValue (int currentCellX, int currentCellY, int facingDir)
@@ -451,7 +444,6 @@ int goalCellValue (int currentCellX, int currentCellY, int facingDir)
 
 void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
-
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int count = 1;
 	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
@@ -479,44 +471,18 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 }
 
 // y is the rows, x is the cols
-bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
+bool junctionCheck(int currentCellX, int currentCellY)
 {
-    int frontCellX = currentCellX;
-    int frontCellY = currentCellY;
-
-    // check if the gird in the front is 1
-    // dir 0 is up, 1 is right, 2 is down, 3 is left
-    bool frontIs1;
-    if(goalCellValue(frontCellX, frontCellY, facingDir) == 1)
+    int validCells = 0;
+    // check if the four girds beside current cell have more than one valid cell
+    for(int direction = 0; direction < 4; direction++)
     {
-        frontIs1 = true;
-    }
-    // now the current x and current y is the one in the front
-    bool zero;
-    // check if there's an empty direction with 0 beside current x and y
-    for(int i = 0; i < 4; i++)
-    {
-        // not checking the back cell
-        if(i != 2)
+        if(isValidMove(currentCellX, currentCellY, direction % 4 ))
         {
-            // check left, front, and right
-            if(goalCellValue(frontCellX, frontCellY, (facingDir + i) % 4 ) == 0)
-            {
-                zero = true;
-            }
+            validCells++;
         }
     }
-    // check front left and front right
-    // move one to the front again
-    makeNextMove(frontCellX, frontCellY, facingDir);
-    if(goalCellValue(frontCellX, frontCellY, (facingDir + 1) % 4 ) == 0
-       || goalCellValue(frontCellX, frontCellY, (facingDir + 3) % 4 ) == 0)
-    {
-        zero = true;
-    }
-
-    // check if both conditions are true
-    if(frontIs1 && zero)
+    if(validCells > 2)
     {
         return true;
     }
