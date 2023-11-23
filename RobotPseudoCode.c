@@ -19,12 +19,12 @@ void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make n
 void readMaze(); //iterates over maze cells and stores as array,
 void initialize(); //initializes robot
 int findNextMove(int currentCellX, int currentCellY, int facingDir); //(done)
-void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
 void modifyMazeMap(int currentCellX, int currentCellY);
 
 void swapToPen(); //Moves pen to colour sensor pos
 void swapToCSensor(); //Moves colour sensor to pen pos
-void drawMaze();
+void drawMaze(int const &currentCellX, int const &currentCellY, int facingDir, int const &startCellX,
+	int const &startCellY, int const &goalCellX, int const &goalCellY);
 void checkBlank();
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
@@ -143,42 +143,6 @@ void readMaze()
 //X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
 {
-    int iEncodeXA = nMotorEncoder[motorA];
-    int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
-    int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54;//1.55;constants for first size of maze
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137;//61;
-    //move the x distance
-    if (currentCellX > nextCellX)
-    {
-    	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
-    }
-    else if (currentCellX < nextCellX)
-    {
-    	motor[motorA] = motor[motorB] = -MOTOR_POWER;
-    }
-    while(abs(nMotorEncoder[motorA] - iEncodeXA) < abs(dEncodeX))
-    {}
-    motor[motorA] = motor[motorB]=0;
-    //move the y distance
-    if (currentCellY > nextCellY)
-    {
-    	motor[motorC] = MOTOR_POWER_Y;
-    }
-    else if (currentCellY < nextCellY)
-    {
-    	motor[motorC] = -MOTOR_POWER_Y;
-    }
-    while(abs(nMotorEncoder[motorC] - iEncodeY) < abs(dEncodeY))
-    {}
-    motor[motorC] = 0;
-    //update the current cell coordinate
-    currentCellX = nextCellX;
-    currentCellY = nextCellY;
-    return;
-}
-void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
-{
     //move the x distance
     if (currentCellX > nextCellX)
     {
@@ -259,11 +223,12 @@ void handrailAlgo()
 		goalCellY=MAZE_C-1;
         mazeMap[goalCellY][goalCellX]=0;
 	}
+	int cursorCellX = currentCellX, cursorCellY = currentCellY;
 
-	while (currentCellX != goalCellX || currentCellY != goalCellY)
+	while (cursorCellX != goalCellX || cursorCellY != goalCellY)
 	{
-		makeNextMove(currentCellX, currentCellY, findNextMove(currentCellX, currentCellY, facingDir));
-		modifyMazeMap(currentCellX, currentCellY);
+		makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
+		modifyMazeMap(cursorCellX, cursorCellY);
 
 		//update current position after each move (in the move functions)
 
@@ -506,5 +471,33 @@ void modifyMazeMap(int currentCellX, int currentCellY)
 	else
 	{
 		mazeMap[currentCellY][currentCellX] = -1;
+	}
+}
+
+void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int &startCellX,
+	int &startCellY, int &goalCellX, int &goalCellY)
+{
+	moveToCell(currentCellX, currentCellY, startCellX, startCellY);
+	while (currentCellX != goalCellX || currentCellY != goalCellY)
+	{
+		int dX = 0, dY = 0, nextMoveDir = findNextMove(currentCellX, currentCellY, facingDir);
+
+		if (nextMoveDir == 0)
+		{
+			dY = 1;
+		}
+		else if (nextMoveDir == 1)
+		{
+			dX = 1;
+		}
+		else if (nextMoveDir == 2)
+		{
+			dY = -1;
+		}
+		else if (nextMoveDir == 3)
+		{
+			dY = -1;
+		}
+		moveToCell(currentCellX, currentCellY, currentCellX + dX, currentCellY + dY);
 	}
 }
