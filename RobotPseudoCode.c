@@ -178,7 +178,55 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     return;
 }
 
-void handrailLAlgo()
+void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
+{
+    int iEncodeXA = nMotorEncoder[motorA];
+    int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
+    int iEncodeY = nMotorEncoder[motorC];
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER * 3.54//1.55;constants for first size of maze
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER * 137//61;
+    //move the x distance
+    if (currentCellX > nextCellX)
+    {
+    	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
+        while(nMotorEncoder[motorA] > nextCllX*3.54*CELL_TO_ENCODER)
+        {}
+    }
+    else if (currentCellX < nextCellX)
+    {
+    	motor[motorA] = motor[motorB] = -MOTOR_POWER;
+        while(nMotorEncoder[motorA] < nextCllX*3.54*CELL_TO_ENCODER)
+        {}
+    }
+    motor[motorA] = motor[motorB]=0;
+    //move the y distance
+    if (currentCellY > nextCellY)
+    {
+    	motor[motorC] = MOTOR_POWER_Y;
+        while(nMotorEncoder[motorA] > nextCllX*137*CELL_TO_ENCODER)
+        {}
+    }
+    else if (currentCellY < nextCellY)
+    {
+    	motor[motorC] = -MOTOR_POWER_Y;
+        while(nMotorEncoder[motorA] < nextCllX*137*CELL_TO_ENCODER)
+        {}
+    }
+// call correct encoder
+    motor[motorC] = 0;
+    //update the current cell coordinate
+    currentCellX = nextCellX;
+    currentCellY = nextCellY;
+    return;
+}
+
+
+void correctEncoder()
+{
+
+}
+
+void handrailAlgo()
 {
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
@@ -207,22 +255,22 @@ void handrailLAlgo()
 	bool top_left = searchEnds();
 	if(top_left)
 	{
-		startCellX = 0;
-		startCellY = 1;
-        mazeMap[startCellX][startCellY] = 0;
-		goalCellX = MAZE_R-1;
-		goalCellY = MAZE_C-2;
-        mazeMap[goalCellX][goalCellY]=0;
+		startCellX=0;
+		startCellY=1;
+        mazeMap[startCellY][startCellX] = 0;
+		goalCellX=MAZE_R-1;
+		goalCellY=MAZE_C-2;
+        mazeMap[goalCellY][goalCellX]=0;
 
 	}
 	else
 	{
 		startCellX=MAZE_R-2;
 		startCellY=0;
-        mazeMap[startCellX][startCellY] = 0;
+        mazeMap[startCellY][startCellX] = 0;
 		goalCellX=1;
 		goalCellY=MAZE_C-1;
-        mazeMap[goalCellX][goalCellY]=0;
+        mazeMap[goalCellY][goalCellX]=0;
 	}
 
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
@@ -355,33 +403,35 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 	return -1;
 }
 
-int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
+bool isValidMove(int currentCellX, int currentCellY, int facingDir) {
+    int count = 1;//because constants don't work here??
+    if (facingDir == 0 && currentCellY - 1 > 0 && mazeMap[currentCellY - count][currentCellX] == VALID_CELL)
+}
+
+int goalCellValue (int currentCellX, int currentCellY, int facingDir)
 {
 		int count=1;
     if (facingDir == 0) //check the north cell
     {
-        currentCellY -= 1;
         return mazeMap[currentCellY-count][currentCellX];
     }
     else if (facingDir == 1) //check the east cell
     {
-        currentCellX += 1;
         return mazeMap[currentCellY][currentCellX+count];
     }
     else if (facingDir == 2) //check the south cell
     {
-        currentCellY -= 1;
         return mazeMap[currentCellY+count][currentCellX];
     }
     else // if (nextDir == 3) check the west cell
     {
-        currentCellX -= 1;
         return mazeMap[currentCellY][currentCellX-count];
     }
 }
 
 void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 {
+
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
 	if (nextDir == 0) //if we need to go up
