@@ -12,7 +12,7 @@ Using left hand rule for the algo
 */
 
 
-void handrailAlgo(); //pain
+void handrailLAlgo(); //pain
 //void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
 //void controlXMotors(int cells); //this is trivial, use moveToCell
@@ -60,7 +60,7 @@ task main()
 	wait1Msec(5000);
 	int maze_time=time1[T1];
 	//start timer
-	//handrailAlgo();
+	//handrailLAlgo();
 	int algo_time=time1[T1]-maze_time;
 	//draw maze
 	int total_time=time1[T1];
@@ -74,7 +74,7 @@ bool searchEnds() //changed so that it checks the array and not moving the actua
 
 void readMaze()
 {		const int LIGHT_THRESHOLD=25;
-		eraseDisplay()
+		eraseDisplay();
     int end_col = 0;
     for (int row = 0; row < MAZE_R;)
     {
@@ -151,8 +151,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54//1.55;constants for first size of maze
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137//61;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54;//1.55;constants for first size of maze
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137;//61;
     //move the x distance
     if (currentCellX > nextCellX)
     {
@@ -183,7 +183,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     return;
 }
 
-void handrailAlgo()
+void handrailLAlgo()
 {
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
@@ -212,11 +212,11 @@ void handrailAlgo()
 	bool top_left = searchEnds();
 	if(top_left)
 	{
-		startCellX=0;
-		startCellY=1;
+		startCellX = 0;
+		startCellY = 1;
         mazeMap[startCellX][startCellY] = 0;
-		goalCellX=MAZE_R-1;
-		goalCellY=MAZE_C-2;
+		goalCellX = MAZE_R-1;
+		goalCellY = MAZE_C-2;
         mazeMap[goalCellX][goalCellY]=0;
 
 	}
@@ -252,19 +252,6 @@ void handrailAlgo()
 
 	}
 }
-
-
-/*
-void cellToMotor(int currentCellX, int currentCellY, int nextCellX, int next CellY)
-{
-	int iEncodeX1 = nMotorEncoder[motorA];
-	int iEncodeX2 = nMotorEncoder[motorB];
-	int iEncodeY = nMotorEncoder[motorD];
-	int dEncodeX = (goalCellX - currentCellX) * CELL_TO_ENCODER;
-	int dEncodeY = (goalCellY - currentCellY) * CELL_TO_ENCODER;
-}
-*/
-
 
 /*
 Inputs: EV3 Buttons, Colour Sensor, Ultrasonic or Touch Sensor, Motor Encoders
