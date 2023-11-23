@@ -189,7 +189,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     else if (currentCellX < nextCellX)
     {
     	motor[motorA] = motor[motorB] = -MOTOR_POWER;
-        while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)+
+        while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)
         {}
     }
     motor[motorA] = motor[motorB]=0;
