@@ -12,7 +12,7 @@ Using left hand rule for the algo
 */
 
 
-void handrailLAlgo(); //pain
+void handrailLAlgo(int startCellX, int startCellY); //pain
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //(Ximena)
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns false if given move would go into wall(Ash, done)
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
@@ -40,7 +40,7 @@ string penDirection[MAZE_R*MAZE_C];
 
 task main()
 {
-
+    int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0;
 	//order of function initializations
 	initialize();
 	//moveToCell(x,y,8,8);
@@ -213,13 +213,14 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     return;
 }
 
-void handrailAlgo()
+void handrailAlgo(int &startCellX, int &startCellY)
 {
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
 
 	//Solve Maze while recording movements
-	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0, facingDir = 0;
+	int goalCellX = 0, goalCellY = 0, facingDir = 0;
+    int cursorCellX = 0, cursorCellY = 0;
 
 	//set ends to black
     for (int row = 0; row < MAZE_R; row++)
@@ -262,11 +263,10 @@ void handrailAlgo()
 
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
-		makeNextMove(currentCellX, currentCellY, findNextMove(currentCellX, currentCellY, facingDir));
-		modifyMazeMap(currentCellX, currentCellY);
+		makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
+		modifyMazeMap(cursorCellX, cursorCellY);
 
 		//update current position after each move (in the move functions)
-
 	}
 }
 
@@ -374,13 +374,13 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to fli
 	return false;
 }
 
-int findNextMove(int currentCellX, int currentCellY, int facingDir)
+int findNextMove(int cursorCellX, int cursorCellY, int facingDir)
 {
 	facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 
 	for (int attempts = 0; attempts < 4; attempts++)//only 3 checks needed since otherwise go back
 	{
-		if(isValidMove(currentCellX, currentCellY, facingDir))
+		if(isValidMove(cursorCellX, cursorCellY, facingDir))
 		{
 			return facingDir;
 		}
@@ -410,7 +410,7 @@ int goalCellValue (int currentCellX, int currentCellY, int facingDir)
     }
 }
 
-void makeNextMove(int currentCellX, int currentCellY, int facingDir)
+void makeNextMove(int &currentCellX, int &currentCellY, int facingDir)
 {
 	//dir 0 is up, 1 is right, 2 is down, 3 is left
 	int nextDir = findNextMove(currentCellX, currentCellY, facingDir);
