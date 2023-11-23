@@ -177,17 +177,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     currentCellY = nextCellY;
     return;
 }
-
-<<<<<<< Updated upstream
-void handrailLAlgo()
-=======
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
 {
-    int iEncodeXA = nMotorEncoder[motorA];
-    int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
-    int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER * 3.54;//1.55;constants for first size of maze
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER * 137;//61;
     //move the x distance
     if (currentCellX > nextCellX)
     {
@@ -198,7 +189,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     else if (currentCellX < nextCellX)
     {
     	motor[motorA] = motor[motorB] = -MOTOR_POWER;
-        while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)
+        while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)+
         {}
     }
     motor[motorA] = motor[motorB]=0;
@@ -223,7 +214,6 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
 }
 
 void handrailAlgo()
->>>>>>> Stashed changes
 {
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
@@ -252,22 +242,22 @@ void handrailAlgo()
 	bool top_left = searchEnds();
 	if(top_left)
 	{
-		startCellX = 0;
-		startCellY = 1;
-        mazeMap[startCellX][startCellY] = 0;
-		goalCellX = MAZE_R-1;
-		goalCellY = MAZE_C-2;
-        mazeMap[goalCellX][goalCellY]=0;
+		startCellX=0;
+		startCellY=1;
+        mazeMap[startCellY][startCellX] = 0;
+		goalCellX=MAZE_R-1;
+		goalCellY=MAZE_C-2;
+        mazeMap[goalCellY][goalCellX]=0;
 
 	}
 	else
 	{
 		startCellX=MAZE_R-2;
 		startCellY=0;
-        mazeMap[startCellX][startCellY] = 0;
+        mazeMap[startCellY][startCellX] = 0;
 		goalCellX=1;
 		goalCellY=MAZE_C-1;
-        mazeMap[goalCellX][goalCellY]=0;
+        mazeMap[goalCellY][goalCellX]=0;
 	}
 
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
@@ -398,32 +388,24 @@ int findNextMove(int currentCellX, int currentCellY, int facingDir)
 	}
 	return -1;
 }
-<<<<<<< Updated upstream
 
-int goalCellValue (int &currentCellX, int &currentCellY, int facingDir)
-=======
 int goalCellValue (int currentCellX, int currentCellY, int facingDir)
->>>>>>> Stashed changes
 {
 		int count=1;
     if (facingDir == 0) //check the north cell
     {
-        currentCellY -= 1;
         return mazeMap[currentCellY-count][currentCellX];
     }
     else if (facingDir == 1) //check the east cell
     {
-        currentCellX += 1;
         return mazeMap[currentCellY][currentCellX+count];
     }
     else if (facingDir == 2) //check the south cell
     {
-        currentCellY -= 1;
         return mazeMap[currentCellY+count][currentCellX];
     }
     else // if (nextDir == 3) check the west cell
     {
-        currentCellX -= 1;
         return mazeMap[currentCellY][currentCellX-count];
     }
 }
@@ -456,44 +438,18 @@ void makeNextMove(int currentCellX, int currentCellY, int facingDir)
 }
 
 // y is the rows, x is the cols
-bool junctionCheck(int currentCellX, int currentCellY, int facingDir)
+bool junctionCheck(int currentCellX, int currentCellY)
 {
-    int frontCellX = currentCellX;
-    int frontCellY = currentCellY;
-
-    // check if the gird in the front is 1
-    // dir 0 is up, 1 is right, 2 is down, 3 is left
-    bool frontIs1;
-    if(goalCellValue(frontCellX, frontCellY, facingDir) == 1)
+    int validCells = 0;
+    // check if the four girds beside current cell have more than one valid cell
+    for(int direction = 0; direction < 4; direction++)
     {
-        frontIs1 = true;
-    }
-    // now the current x and current y is the one in the front
-    bool zero;
-    // check if there's an empty direction with 0 beside current x and y
-    for(int i = 0; i < 4; i++)
-    {
-        // not checking the back cell
-        if(i != 2)
+        if(isValidMove(currentCellX, currentCellY, direction % 4 ))
         {
-            // check left, front, and right
-            if(goalCellValue(frontCellX, frontCellY, (facingDir + i) % 4 ) == 0)
-            {
-                zero = true;
-            }
+            validCells++;
         }
     }
-    // check front left and front right
-    // move one to the front again
-    makeNextMove(frontCellX, frontCellY, facingDir);
-    if(goalCellValue(frontCellX, frontCellY, (facingDir + 1) % 4 ) == 0
-       || goalCellValue(frontCellX, frontCellY, (facingDir + 3) % 4 ) == 0)
-    {
-        zero = true;
-    }
-
-    // check if both conditions are true
-    if(frontIs1 && zero)
+    if(validCells > 2)
     {
         return true;
     }
