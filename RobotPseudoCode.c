@@ -52,6 +52,12 @@ task main()
 	//searchEnds();
 	time1[T1]=0;
 	readMaze();
+	eraseDisplay();
+	for(int i=2; i<MAZE_R+2;i++)
+	{
+		displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	}
+	wait1Msec(5000);
 	int maze_time=time1[T1];
 	//start timer
 	//handrailAlgo();
@@ -145,8 +151,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.53//1.55;constants for first size of maze
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*140//61;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54//1.55;constants for first size of maze
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137//61;
     //move the x distance
     if (currentCellX > nextCellX)
     {
