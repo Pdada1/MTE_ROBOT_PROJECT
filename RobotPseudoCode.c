@@ -12,13 +12,17 @@ Using left hand rule for the algo
 */
 
 
+<<<<<<< Updated upstream
 void handrailLAlgo(); //pain
+=======
+void handrailLAlgo(int startCellX, int startCellY, int &currentCellX, int &currentCellY); //pain
+>>>>>>> Stashed changes
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //(Ximena)
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns false if given move would go into wall(Ash, done)
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
 void readMaze(); //iterates over maze cells and stores as array,
 void initialize(); //initializes robot
-int findNextMove(int currentCellX, int currentCellY, int facingDir); //(done)
+int findNextMove(int cursorCellX, int cursorCellY, int facingDir); //(done)
 void modifyMazeMap(int currentCellX, int currentCellY);
 
 void swapToPen(); //Moves pen to colour sensor pos
@@ -177,13 +181,21 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     return;
 }
 
+<<<<<<< Updated upstream
 void handrailAlgo()
+=======
+void handrailLAlgo(int &startCellX, int &startCellY, int &currentCellX, int &currentCellY)
+>>>>>>> Stashed changes
 {
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
 
 	//Solve Maze while recording movements
+<<<<<<< Updated upstream
 	int currentCellX = 0, currentCellY = 0, startCellX = 0, startCellY = 0, goalCellX = 0, goalCellY = 0, facingDir = 0;
+=======
+	int goalCellX = 0, goalCellY = 0, facingDir = 0;
+>>>>>>> Stashed changes
 
 	//set ends to black
     for (int row = 0; row < MAZE_R; row++)
