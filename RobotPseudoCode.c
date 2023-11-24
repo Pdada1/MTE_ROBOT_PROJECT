@@ -29,6 +29,7 @@ void swapToPen(); //Moves pen to colour sensor pos
 void swapToCSensor(); //Moves colour sensor to pen pos
 void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int const &startCellX,
 	int const &startCellY, int const &goalCellX, int const &goalCellY);
+
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -253,6 +254,7 @@ int cursorCellX = 0, cursorCellY = 0;
     {
         makeNextMoveL(cursorCellX, cursorCellY, findNextMoveL(cursorCellX, cursorCellY, facingDir));
     }
+    mazeMap[goalCellY][goalCellX]=1;
 }
 
 /*
@@ -540,6 +542,7 @@ void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int &startCel
 		moveToCell(currentCellX, currentCellY, targetXCell, targetYCell);
 	}
 }
+
 int findNextPlot(int const & cursorCellX, int const & cursorCellY, int &facingDir, int validValue)
 {
     facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
@@ -562,7 +565,7 @@ bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validVal
     if(facingDir == 0 && currentCellY - count >= 0)
     {
         checkCellValue = mazeMap[currentCellY - count][currentCellX];
-        if(checkCellValue != validValue)
+        if(checkCellValue == validValue)
         {
             return true;
         }
@@ -570,7 +573,7 @@ bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validVal
     else if(facingDir == 1 && currentCellX + count <= MAZE_C)
     {
         checkCellValue = mazeMap[currentCellY][currentCellX + count];
-        if(checkCellValue != validValue)
+        if(checkCellValue == validValue)
         {
             return true;
         }
@@ -578,7 +581,7 @@ bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validVal
     else if(facingDir == 2 && currentCellY - count <= MAZE_R)
     {
         checkCellValue = mazeMap[currentCellY + count][currentCellX];
-        if(checkCellValue != validValue)
+        if(checkCellValue == validValue)
         {
             return true;
         }
@@ -586,7 +589,7 @@ bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validVal
     else if(facingDir == 3 && currentCellX - count >= 0)
     {
         checkCellValue = mazeMap[currentCellY][currentCellX - count];
-        if(checkCellValue != validValue)
+        if(checkCellValue == validValue)
         {
             return true;
         }
