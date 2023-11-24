@@ -107,24 +107,23 @@ void handrailAlgo(int &startCellX, int &startCellY)
         mazeMap[goalCellY][goalCellX]=0;
 	}
 
-    cout << "start cell: [" <<  startCellY << ", " << startCellX << "]" << endl;
-    cout << "goal cell: [" << goalCellY << ", " << goalCellX << "]" << endl;
+//    cout << "start cell: [" <<  startCellY << ", " << startCellX << "]" << endl;
+//    cout << "goal cell: [" << goalCellY << ", " << goalCellX << "]" << endl;
 
     cursorCellX = startCellX;
     cursorCellY = startCellY;
 
 	while (cursorCellX != goalCellX || cursorCellY != goalCellY)
 	{
-        // modifyMazeMap(cursorCellX, cursorCellY);
         makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
 	}
 }
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
 {
-    cout << mazeMap[0][1];
     return (mazeMap[0][1] == 0);
 }
+
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to flip params
 {
     int count = 1;//because constants don't work here??

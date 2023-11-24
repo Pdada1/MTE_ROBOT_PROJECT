@@ -11,6 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="63faedf1-bf92-4c20-b97b-f2d228af3d24" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HandrailAlgo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/HandrailAlgo.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RobotPseudoCode.c" beforeDir="false" afterPath="$PROJECT_DIR$/RobotPseudoCode.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +50,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "x3",
+    "git-widget-placeholder": "x4",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -77,6 +78,7 @@
       <workItem from="1700701123826" duration="3616000" />
       <workItem from="1700705223865" duration="1357000" />
       <workItem from="1700709848102" duration="1281000" />
+      <workItem from="1700794092888" duration="625000" />
     </task>
     <servers />
   </component>
