@@ -3,7 +3,7 @@ Motors for x direction: A,B
 Motors for y direction: C
 Motors for pen: D
 Color Sensor Port: S1
-Touch Sensor Port: S2
+Touch Sensor Port: S2, S3
 Passage=0
 Wall=-1
 Traversed Passage =1
@@ -11,7 +11,9 @@ if we double traverse set back to -1
 Using left hand rule for the algo
 */
 
-
+void align_motors();
+void penUp();
+void penDown();
 void handrailLAlgo(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &facingDir); //pain
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //(Ximena)
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns false if given move would go into wall(Ash, done)
@@ -29,7 +31,6 @@ void swapToPen(); //Moves pen to colour sensor pos
 void swapToCSensor(); //Moves colour sensor to pen pos
 void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int const &startCellX,
 	int const &startCellY, int const &goalCellX, int const &goalCellY);
-
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -269,6 +270,7 @@ void initialize()
 	SensorType[S1] = sensorEV3_Color;
 	wait1Msec(10);
 	SensorType[S2] = sensorEV3_Touch;
+	sensorType[S3] = sensorEV3_Touch;
 	wait1Msec(10);
 	SensorMode[S1] = modeEV3Color_Reflected;
 	wait1Msec(10);
@@ -286,6 +288,7 @@ void initialize()
 			mazeMap[row][col] = 0;
 		}
 	}
+	align_motors();
 	//displays configuration intstructions for user to position print head on first cell at 0,0
 	displayString(2, "Use the buttons");
 	displayString(3, "to align");
@@ -472,6 +475,21 @@ void swapToPen()
 	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
 	{}
 	motor[motorC]=0;
+	nMotorEncoder[motorD]=0;
+	motor[motorD]=-5;
+	//while(!getButtonPress(buttonEnter))
+	while (abs(nMotorEncoder[motorD])< 45)
+	{}
+	motor[motorD]=0;
+	wait1Msec(5000);
+	motor[motorD]=5;
+	//while(!getButtonPress(buttonEnter))
+	while (abs(nMotorEncoder[motorD])>0)
+	{}
+	motor[motorD]=0;
+	displayString(12, "The Pen Motor Encoder Value is %d", nMotorEncoder[motorD]);
+	displayString(13,"%d", nMotorEncoder[motorD]);
+	wait1Msec(10000);
 }
 
 void swapToCSensor()
@@ -595,4 +613,33 @@ bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validVal
         }
     }
     return false;
+}
+
+void align_motors()
+{
+	motor[motorA]=motor[motorB]=-MOTOR_POWER;
+	while(SensorValue[S2]+SensorValue[S3]!=2)
+	{
+		if(SensorValue[S2]==1)
+			motor[motorB]=0;
+		if(SensorValue[S3]==1)
+			motor[motorA]=0;
+	}
+	motor[motorA]=motor[motorB]=0;
+}
+
+void penUp()
+{
+	motor[motorD]=-10;
+	while(nMotorEncoder[motorD]>0)
+	{}
+	motor[motorD]=0;
+}
+void penDown()
+{
+	nMotorEncoder[motorD]=0;
+	motor[motorD]=10;
+	while(nMotorEncoder[motorD]<30)
+	{}
+	motor[motorD]=0;
 }
