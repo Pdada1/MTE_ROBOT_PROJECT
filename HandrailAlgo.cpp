@@ -8,27 +8,38 @@ bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns f
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir); //make next move and update mazeMap (char)
 void readMaze(); //iterates over maze cells and stores as array,
 void initialize(); //initializes robot
-int findNextMove(int currentCellX, int currentCellY, int &facingDir); //(done)
+int findNextMove(int const & cursorCellX, int const & cursorCellY, int &facingDir); //(done)
 void storeNextMove(int currentCellX, int currentCellY, int facingDir); //(pranav)
-void modifyMazeMap(int currentCellX, int currentCellY);
+void modifyMazeMap(int const & cursorCellX, int const & cursorCellY);
 bool searchEnds();
+bool checkBlank();
 
-const int MAZE_R = 9;
-int MAZE_C = 9;
+const int MAZE_R = 17;
+int MAZE_C = 17;
 int WALL = -1;
-int mazeMap[9][9] = {
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
-        {-1, 0, 0, 0, 0, 0, 0, 0, 0},
-        {-1, 0, -1, -1, -1, -1, -1, 0, -1},
-        {-1, 0, 0, 0, -1, 0, -1, 0, -1},
-        {-1, 0, -1, -1, -1, 0, 1, 0, -1},
-        {-1, 0, -1, 0, 0, 0, -1, 0, -1},
-        {-1, 0, -1, 0, 1, 1, -1, 0, -1},
-        {0, 0, -1, 0, 0, 0, 0, 0, -1},
-        {-1, -1, -1, -1, -1, -1, -1, -1, -1}
+int mazeMap[17][17] = {
+        {-1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1},
+        {-1, 0, -1, -1, -1, 0, -1, 0, -1, 0, -1, 0, -1, -1, -1, 0, -1},
+        {-1, 0, -1, 0, 0, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0, 0, -1},
+        {-1, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, 0, -1, -1, -1, 0, -1},
+        {-1, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, -1, 0, -1},
+        {-1, -1, -1, 0, -1, -1, -1, -1, -1, 0, -1, 0, -1, 0, -1, -1, -1},
+        {-1, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, -1},
+        {-1, 0, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1},
+        {-1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1},
+        {-1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1},
+        {-1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1},
+        {-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1},
+        {-1, 0, -1, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, -1},
+        {-1, 0, -1, -1, -1, -1, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1},
+        {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1, 0, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1}
 };
 
 int main() {
+
+    cout << mazeMap[0][1];
 
     int startCellX = 0;
     int startCellY = 0;
@@ -46,6 +57,10 @@ int main() {
 
 void handrailAlgo(int &startCellX, int &startCellY)
 {
+    if (checkBlank())
+    {
+        // return EXIT.FAILURE;
+    }
 	//Define solution as a modification of the mazeMap, all 0/1
 	//Solution will be realized by sequence of movements from point to point
 
@@ -53,22 +68,22 @@ void handrailAlgo(int &startCellX, int &startCellY)
 	int goalCellX = 0, goalCellY = 0, facingDir = 0;
     int cursorCellX = 0, cursorCellY = 0;
 
-	//set ends to black
-    for (int row = 0; row < MAZE_R; row++)
-    {
-        if (row == 0 || row == MAZE_R-1)
-        {
-            for (int col = 0; col < MAZE_C; col++)
-            {
-                mazeMap[row][col] = -1;
-            }
-        }
-        else
-        {
-            mazeMap[row][0] = -1;
-            mazeMap[row][MAZE_C-1] = -1;
-        }
-    }
+//    set ends to black
+//    for (int row = 0; row < MAZE_R; row++)
+//    {
+//        if (row == 0 || row == MAZE_R-1)
+//        {
+//            for (int col = 0; col < MAZE_C; col++)
+//            {
+//                mazeMap[row][col] = -1;
+//            }
+//        }
+//        else
+//        {
+//            mazeMap[row][0] = -1;
+//            mazeMap[row][MAZE_C-1] = -1;
+//        }
+//    }
 
     //search mazeMap for start and end points
 	bool top_left = searchEnds();
@@ -76,7 +91,7 @@ void handrailAlgo(int &startCellX, int &startCellY)
 	{
 		startCellX = 1;
 		startCellY = 0;
-        mazeMap[startCellY][startCellX] = 1;
+        // mazeMap[startCellY][startCellX] = 1;
 		goalCellX = MAZE_C-2;
 		goalCellY = MAZE_R-1;
         mazeMap[goalCellY][goalCellX]=0;
@@ -86,7 +101,7 @@ void handrailAlgo(int &startCellX, int &startCellY)
 	{
 		startCellX= 0;
 		startCellY=MAZE_R-2;
-        mazeMap[startCellY][startCellX] = 1;
+        // mazeMap[startCellY][startCellX] = 1;
 		goalCellX=MAZE_C-1;
 		goalCellY=1;
         mazeMap[goalCellY][goalCellX]=0;
@@ -100,41 +115,56 @@ void handrailAlgo(int &startCellX, int &startCellY)
 
 	while (cursorCellX != goalCellX || cursorCellY != goalCellY)
 	{
-		makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
-        // cout << cursorCellX << "\t" << cursorCellY << endl;
-		modifyMazeMap(cursorCellX, cursorCellY);
-
-		//update current position after each move (in the move functions)
+        // modifyMazeMap(cursorCellX, cursorCellY);
+        makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
 	}
 }
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
 {
+    cout << mazeMap[0][1];
     return (mazeMap[0][1] == 0);
 }
 bool isValidMove(int currentCellX, int currentCellY, int facingDir)//need to flip params
 {
     int count = 1;//because constants don't work here??
-    if(facingDir == 0 && currentCellY - count >= 0 && mazeMap[currentCellY - count][currentCellX] != WALL)
+    int checkCellValue;
+    if(facingDir == 0 && currentCellY - count >= 0)
     {
-        return true;
+        checkCellValue = mazeMap[currentCellY - count][currentCellX];
+        if(checkCellValue != WALL)
+        {
+            return true;
+        }
     }
-    else if(facingDir == 1 && currentCellX + count <= MAZE_C && mazeMap[currentCellY][currentCellX + count] != WALL)
+    else if(facingDir == 1 && currentCellX + count <= MAZE_C)
     {
-        return true;
+        checkCellValue = mazeMap[currentCellY][currentCellX + count];
+        if(checkCellValue != WALL)
+        {
+            return true;
+        }
     }
-    else if(facingDir == 2 && currentCellY - count <= MAZE_R && mazeMap[currentCellY + count][currentCellX] != WALL)
+    else if(facingDir == 2 && currentCellY - count <= MAZE_R)
     {
-        return true;
+        checkCellValue = mazeMap[currentCellY + count][currentCellX];
+        if(checkCellValue != WALL)
+        {
+            return true;
+        }
     }
-    else if(facingDir == 3 && currentCellX - count >= 0 && mazeMap[currentCellY][currentCellX - count] != WALL)
+    else if(facingDir == 3 && currentCellX - count >= 0)
     {
-        return true;
+        checkCellValue = mazeMap[currentCellY][currentCellX - count];
+        if(checkCellValue != WALL)
+        {
+            return true;
+        }
     }
     return false;
 }
 
-int findNextMove(int cursorCellX, int cursorCellY, int &facingDir)
+int findNextMove(int const & cursorCellX, int const & cursorCellY, int & facingDir)
 {
     facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
 
@@ -152,27 +182,24 @@ int findNextMove(int cursorCellX, int cursorCellY, int &facingDir)
 void makeNextMove(int &currentCellX, int &currentCellY, int facingDir)
 {
     //dir 0 is up, 1 is right, 2 is down, 3 is left
-    // int nextDir = findNextMove(currentCellX, currentCellY, &facingDir);
+    //update current position after each move (in the move functions)
+    modifyMazeMap(currentCellX, currentCellY);
     if (facingDir == 0) //if we need to go up
     {
-        // modifyMazeMap(currentCellX, currentCellY);
         currentCellY -= 1;
         // when are we calling move to cell
 
     }
     else if (facingDir == 1) //if we need to go right
     {
-        // modifyMazeMap(currentCellX, currentCellY);
         currentCellX += 1;
     }
     else if (facingDir == 2) //if we need to go down
     {
-        // modifyMazeMap(currentCellX, currentCellY);
         currentCellY += 1;
     }
     else if (facingDir == 3) //if we need to go left
     {
-        // modifyMazeMap(currentCellX, currentCellY);
         currentCellX -= 1;
     }
 }
@@ -201,14 +228,14 @@ bool checkBlank()
     return (mazeMap[0][1]==mazeMap[1][0]);
 }
 
-void modifyMazeMap(int currentCellX, int currentCellY)
+void modifyMazeMap(int const & cursorCellX, int const & cursorCellY)
 {
-    if (mazeMap[currentCellY][currentCellX] == 0 || junctionCheck(currentCellX, currentCellY))
+    if (mazeMap[cursorCellY][cursorCellX] == 0 || junctionCheck(cursorCellX, cursorCellY))
     {
-        mazeMap[currentCellY][currentCellX] = 1;
+        mazeMap[cursorCellY][cursorCellX] = 1;
     }
     else
     {
-        mazeMap[currentCellY][currentCellX] = -1;
+        mazeMap[cursorCellY][cursorCellX] = 2;
     }
 }
