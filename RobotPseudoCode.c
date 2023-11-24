@@ -37,7 +37,18 @@ void breadthFirstSolve(); //genuine suffering
 
 const int MAZE_R = 9, MAZE_C = 9, MOTOR_POWER = 10,	MOTOR_POWER_Y = 100, CELL_TO_ENCODER = 180/(PI*2.75), WALL = -1,
 PASSAGE = 1, BACKTRACK = 2, INVALID = -32;
-int mazeMap[MAZE_R][MAZE_C];
+// int mazeMap[MAZE_R][MAZE_C];
+int mazeMap[9][9] = {
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
+        {-1, 0, 0, 0, 0, 0, 0, 0, 0},
+        {-1, 0, -1, -1, -1, -1, -1, 0, -1},
+        {-1, 0, 0, 0, -1, 0, -1, 0, -1},
+        {-1, 0, -1, -1, -1, 0, 1, 0, -1},
+        {-1, 0, -1, 0, 0, 0, -1, 0, -1},
+        {-1, 0, -1, 0, 1, 1, -1, 0, -1},
+        {0, 0, -1, 0, 0, 0, 0, 0, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1}
+};
 string penDirection[MAZE_R*MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
@@ -48,7 +59,7 @@ task main()
 	//order of function initializations
 	initialize();
 	time1[T1]=0;
-	readMaze();
+	// readMaze();
 	eraseDisplay();
 	for(int i=2; i<MAZE_R+2;i++)
 	{
@@ -191,6 +202,7 @@ void handrailLAlgo(int &startCellX, int &startCellY, int &goalCellX, int &goalCe
 //Solution will be realized by sequence of movements from point to point
 
 //Solve Maze while recording movements
+int goalCellX = 0, goalCellY = 0, facingDir = 0;
 int cursorCellX = 0, cursorCellY = 0;
 
 //    set ends to black
