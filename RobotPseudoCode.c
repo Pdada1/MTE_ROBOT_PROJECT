@@ -27,7 +27,7 @@ void swapToPen(); //Moves pen to colour sensor pos
 void swapToCSensor(); //Moves colour sensor to pen pos
 void drawMaze(int const &currentCellX, int const &currentCellY, int facingDir, int const &startCellX,
 	int const &startCellY, int const &goalCellX, int const &goalCellY);
-void checkBlank();
+
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -241,6 +241,7 @@ int cursorCellX = 0, cursorCellY = 0;
     {
         makeNextMove(cursorCellX, cursorCellY, findNextMove(cursorCellX, cursorCellY, facingDir));
     }
+    mazeMap[goalCellY][goalCellX]=1;
 }
 
 /*
@@ -523,4 +524,58 @@ void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int &startCel
 		}
 		moveToCell(currentCellX, currentCellY, currentCellX + dX, currentCellY + dY);
 	}
+}
+
+int findNextPlot(int const & cursorCellX, int const & cursorCellY, int &facingDir, int validValue)
+{
+    facingDir = (3 + facingDir )%4; //equivalent to (facingDir - 1) %4?
+
+    for (int attempts = 0; attempts < 4; attempts++)//only 3 checks needed since otherwise go back
+    {
+        if(isValidPlot(cursorCellX, cursorCellY, facingDir, validValue))
+    {
+        return facingDir;
+    }
+        facingDir = (facingDir + 1) % 4;
+    }
+    return INVALID;
+}
+
+bool isValidPlot(int currentCellX, int currentCellY, int facingDir, int validValue)
+{
+    int count = 1;//because constants don't work here??
+    int checkCellValue;
+    if(facingDir == 0 && currentCellY - count >= 0)
+    {
+        checkCellValue = mazeMap[currentCellY - count][currentCellX];
+        if(checkCellValue == validValue)
+        {
+            return true;
+        }
+    }
+    else if(facingDir == 1 && currentCellX + count <= MAZE_C)
+    {
+        checkCellValue = mazeMap[currentCellY][currentCellX + count];
+        if(checkCellValue == validValue)
+        {
+            return true;
+        }
+    }
+    else if(facingDir == 2 && currentCellY - count <= MAZE_R)
+    {
+        checkCellValue = mazeMap[currentCellY + count][currentCellX];
+        if(checkCellValue == validValue)
+        {
+            return true;
+        }
+    }
+    else if(facingDir == 3 && currentCellX - count >= 0)
+    {
+        checkCellValue = mazeMap[currentCellY][currentCellX - count];
+        if(checkCellValue == validValue)
+        {
+            return true;
+        }
+    }
+    return false;
 }
