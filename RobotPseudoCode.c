@@ -11,7 +11,6 @@ if we double traverse set back to 0
 Using left hand rule for the algo
 */
 
-
 void handrailAlgo(); //pain
 //void searchEnds(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY); //find start/end of maze (Charlene)
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //move from current to goal cell, update current position(Ximena)
@@ -33,6 +32,8 @@ void drawMaze();
 void checkBlank();
 
 void align_motors();
+void penUp();
+void penDown();
 
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
@@ -51,7 +52,7 @@ task main()
 
 	//order of function initializations
 	//initialize
-	swapToPen();
+	penDown();
 	//moveToCell(x,y,8,8);
 	//searchEnds();
 	//time1[T1]=0;
@@ -588,4 +589,20 @@ void align_motors()
 			motor[motorA]=0;
 	}
 	motor[motorA]=motor[motorB]=0;
+}
+
+void penUp()
+{
+	motor[motorD]=-10;
+	while(nMotorEncoder[motorD]>0)
+	{}
+	motor[motorD]=0;
+}
+void penDown()
+{
+	nMotorEncoder[motorD]=0;
+	motor[motorD]=10;
+	while(nMotorEncoder[motorD]<30)
+	{}
+	motor[motorD]=0;
 }
