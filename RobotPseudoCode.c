@@ -14,7 +14,7 @@ Using left hand rule for the algo
 void align_motors();
 void penUp();
 void penDown();
-void handrailLAlgo(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &facingDir); //pain
+void handrailLAlgo(int &startCellX, int &startCellY); //pain
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY); //(Ximena)
 bool isValidMove(int currentCellX, int currentCellY, int facingDir); //returns false if given move would go into wall(Ash, done)
 int findNextMoveL(int const &cursorCellX, int const &cursorCellY, int &facingDir); //(done)
@@ -61,23 +61,46 @@ task main()
 	//order of function initializations
 	initialize();
 	time1[T1]=0;
-	// readMaze();
-	eraseDisplay();
-	for(int i=2; i<MAZE_R+2;i++)
-	{
-		displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
-	}
-	wait1Msec(5000);
-	int maze_time=time1[T1];
-	//start timer
-  handrailLAlgo(startCellX, startCellY, goalCellX, goalCellY, facingDir);
-	int algo_time=time1[T1]-maze_time;
-	swapToPen();
+	//currentCellX=8;
+	//currentCellY=8;
+	//penUp();
+
+	readMaze();
+	//for(int i=2; i<MAZE_R+2;i++)
+	//{
+	//	displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	//}
+	//wait1Msec(5000);
+	//int maze_time=time1[T1];
+	////start timer
+	//eraseDisplay();
+ // handrailLAlgo(startCellX, startCellY);
+ // for(int i=2; i<MAZE_R+2;i++)
+	//{
+	//	displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	//}
+	//wait1Msec(5000);
+	//int algo_time=time1[T1]-maze_time;
 	//draw maze
+	motor[motorA] = motor[motorB] = MOTOR_POWER;
+	wait1Msec(2000);
+	motor[motorC] = MOTOR_POWER_Y;
+	wait1Msec(2000);
+	displayString(1, "movetocell");
+	wait1Msec(5000);
+	moveToCell(currentCellX, currentCellY, 0, 1);
+	displayString(2, "after movetocell");
+	wait1Msec(5000);
+	displayString(3, "swap");
+	wait1Msec(5000);
+	swapToPen();
+	displayString(4, "after swap");
+	wait1Msec(5000);
 	drawMaze(currentCellX, currentCellY, facingDir, startCellX, startCellY, goalCellX, goalCellY);
+	penUp();
 	int total_time=time1[T1];
-	int draw_time=total_time-maze_time-algo_time;
-	swapToCSensor();
+	//int draw_time=total_time-maze_time-algo_time;
+	//swapToCSensor();
 }
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
@@ -165,13 +188,13 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     //move the x distance
     if (currentCellX > nextCellX)
     {
-    	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
+    	motor[motorA] = motor[motorB] = -MOTOR_POWER; //test to make sure directions are right
         while(nMotorEncoder[motorA] > nextCellX*3.54*CELL_TO_ENCODER)
         {}
     }
     else if (currentCellX < nextCellX)
     {
-    	motor[motorA] = motor[motorB] = -MOTOR_POWER;
+    	motor[motorA] = motor[motorB] = MOTOR_POWER;
         while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)
         {}
     }
@@ -179,15 +202,15 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     //move the y distance
     if (currentCellY > nextCellY)
     {
-    	motor[motorC] = MOTOR_POWER_Y;
-        while(nMotorEncoder[motorA] > nextCellX*137*CELL_TO_ENCODER)
+    	motor[motorC] = -MOTOR_POWER_Y;
+        while(nMotorEncoder[motorC] > nextCellY*137*CELL_TO_ENCODER)
         {}
     }
     else if (currentCellY < nextCellY)
     {
-    	motor[motorC] = -MOTOR_POWER_Y;
-        while(nMotorEncoder[motorA] < nextCellX*137*CELL_TO_ENCODER)
-        {}
+    	motor[motorC] = MOTOR_POWER_Y;
+        while(nMotorEncoder[motorC] < nextCellY*137*CELL_TO_ENCODER)
+        {displayString(7, "encoder: %d", nMotorEncoder[motorC]);}
     }
     motor[motorC] = 0;
     //update the current cell coordinate
@@ -196,7 +219,7 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     return;
 }
 
-void handrailLAlgo(int &startCellX, int &startCellY, int &goalCellX, int &goalCellY, int &facingDir)
+void handrailLAlgo(int &startCellX, int &startCellY)
 {
     if (checkBlank())
     {}
@@ -461,7 +484,7 @@ bool junctionCheck(int currentCellX, int currentCellY)
 
 void swapToPen()
 {
-	int const MoveX=4700;
+	int const MoveX=3600;
 	int const MoveY=0;
 	int const currentX=nMotorEncoder[motorC];
 	int const currentY=nMotorEncoder[motorA];
@@ -475,26 +498,11 @@ void swapToPen()
 	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
 	{}
 	motor[motorC]=0;
-	nMotorEncoder[motorD]=0;
-	motor[motorD]=-5;
-	//while(!getButtonPress(buttonEnter))
-	while (abs(nMotorEncoder[motorD])< 45)
-	{}
-	motor[motorD]=0;
-	wait1Msec(5000);
-	motor[motorD]=5;
-	//while(!getButtonPress(buttonEnter))
-	while (abs(nMotorEncoder[motorD])>0)
-	{}
-	motor[motorD]=0;
-	displayString(12, "The Pen Motor Encoder Value is %d", nMotorEncoder[motorD]);
-	displayString(13,"%d", nMotorEncoder[motorD]);
-	wait1Msec(10000);
 }
 
 void swapToCSensor()
 {
-	int const MoveX = 4700;
+	int const MoveX = 3600;
 	int const MoveY = 0;
 	int currentX = nMotorEncoder[motorC];
 	int currentY = nMotorEncoder[motorA];
@@ -531,7 +539,8 @@ void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int &startCel
 	int &startCellY, int &goalCellX, int &goalCellY)
 {
 
-	moveToCell(currentCellX, currentCellY, startCellX, startCellY);
+
+	penDown();
 	while (currentCellX != goalCellX || currentCellY != goalCellY)
 	{
 		int dX = 0, dY = 0, nextMoveDir = findNextPlot(currentCellX, currentCellY, facingDir, PASSAGE);
@@ -631,7 +640,8 @@ void align_motors()
 void penUp()
 {
 	motor[motorD]=-10;
-	while(nMotorEncoder[motorD]>0)
+	int current_value=nMotorEncoder[motorD];
+	while(abs(nMotorEncoder[motorD]-current_value)<30)
 	{}
 	motor[motorD]=0;
 }
