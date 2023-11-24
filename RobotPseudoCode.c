@@ -3,7 +3,7 @@ Motors for x direction: A,B
 Motors for y direction: C
 Motors for pen: D
 Color Sensor Port: S1
-Touch Sensor Port: S2
+Touch Sensor Port: S2, S3
 Passage=0
 Wall=-1
 Traversed Passage =1
@@ -31,6 +31,9 @@ void swapToCSensor();
 void drawMaze();
 
 void checkBlank();
+
+void align_motors();
+
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -47,24 +50,25 @@ task main()
 {
 
 	//order of function initializations
-	initialize();
+	//initialize
+	swapToPen();
 	//moveToCell(x,y,8,8);
 	//searchEnds();
-	time1[T1]=0;
-	readMaze();
-	eraseDisplay();
-	for(int i=2; i<MAZE_R+2;i++)
-	{
-		displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
-	}
-	wait1Msec(5000);
-	int maze_time=time1[T1];
-	//start timer
-	//handrailAlgo();
-	int algo_time=time1[T1]-maze_time;
-	//draw maze
-	int total_time=time1[T1];
-	int draw_time=total_time-maze_time-algo_time;
+	//time1[T1]=0;
+	//readMaze();
+	//eraseDisplay();
+	//for(int i=2; i<MAZE_R+2;i++)
+	//{
+	//	displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	//}
+	//wait1Msec(5000);
+	//int maze_time=time1[T1];
+	////start timer
+	////handrailAlgo();
+	//int algo_time=time1[T1]-maze_time;
+	////draw maze
+	//int total_time=time1[T1];
+	//int draw_time=total_time-maze_time-algo_time;
 }
 
 bool searchEnds() //changed so that it checks the array and not moving the actual track and whatnot
@@ -73,8 +77,8 @@ bool searchEnds() //changed so that it checks the array and not moving the actua
 }
 
 void readMaze()
-{		const int LIGHT_THRESHOLD=25;
-		eraseDisplay()
+{		const int LIGHT_THRESHOLD=20;
+		eraseDisplay();
     int end_col = 0;
     for (int row = 0; row < MAZE_R;)
     {
@@ -151,8 +155,8 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     int iEncodeXA = nMotorEncoder[motorA];
     int iEncodeXB = nMotorEncoder[motorB]; //not sure if this line is necessary
     int iEncodeY = nMotorEncoder[motorC];
-    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54//1.55;constants for first size of maze
-    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137//61;
+    int dEncodeX = (nextCellX - currentCellX) * CELL_TO_ENCODER*3.54;//1.55constants for first size of maze
+    int dEncodeY = (nextCellY - currentCellY) * CELL_TO_ENCODER*137;//61
     //move the x distance
     if (currentCellX > nextCellX)
     {
@@ -279,10 +283,10 @@ void initialize()
 	SensorType[S1] = sensorEV3_Color;
 	wait1Msec(10);
 	SensorType[S2] = sensorEV3_Touch;
+	sensorType[S3] = sensorEV3_Touch;
 	wait1Msec(10);
 	SensorMode[S1] = modeEV3Color_Reflected;
 	wait1Msec(10);
-	const int MTR_ENC_LIMIT_MAG=650;
 	const int XMOTOR_CONFIG_PWR=10;
 	const int YMOTOR_CONFIG_PWR=100;
 	SensorType[S1]=sensorEV3_Color;
@@ -297,6 +301,7 @@ void initialize()
 			mazeMap[row][col] = 0;
 		}
 	}
+	align_motors();
 	//displays configuration intstructions for user to position print head on first cell at 0,0
 	displayString(2, "Use the buttons");
 	displayString(3, "to align");
@@ -502,6 +507,21 @@ void swapToPen()
 	while(abs(nMotorEncoder[motorC]-currentX)<MoveX)
 	{}
 	motor[motorC]=0;
+	nMotorEncoder[motorD]=0;
+	motor[motorD]=-5;
+	//while(!getButtonPress(buttonEnter))
+	while (abs(nMotorEncoder[motorD])< 45)
+	{}
+	motor[motorD]=0;
+	wait1Msec(5000);
+	motor[motorD]=5;
+	//while(!getButtonPress(buttonEnter))
+	while (abs(nMotorEncoder[motorD])>0)
+	{}
+	motor[motorD]=0;
+	displayString(12, "The Pen Motor Encoder Value is %d", nMotorEncoder[motorD]);
+	displayString(13,"%d", nMotorEncoder[motorD]);
+	wait1Msec(10000);
 }
 
 void swapToCSensor()
@@ -555,4 +575,17 @@ void movePen(int startCellX, int startCellY, int goalCellX, int goalCellY)
 bool checkBlank()
 {
 	return (mazeMap[0][1]==mazeMap[1][0]);
+}
+
+void align_motors()
+{
+	motor[motorA]=motor[motorB]=-MOTOR_POWER;
+	while(SensorValue[S2]+SensorValue[S3]!=2)
+	{
+		if(SensorValue[S2]==1)
+			motor[motorB]=0;
+		if(SensorValue[S3]==1)
+			motor[motorA]=0;
+	}
+	motor[motorA]=motor[motorB]=0;
 }
