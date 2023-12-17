@@ -31,6 +31,7 @@ void swapToPen(); //Moves pen to colour sensor pos
 void swapToCSensor(); //Moves colour sensor to pen pos
 void drawMaze(int &currentCellX, int &currentCellY, int facingDir, int const &startCellX,
 	int const &startCellY, int const &goalCellX, int const &goalCellY);
+
 /*
 void depthFirstSolve(); //genuine suffering (but also semi-redundant so that makes it worse)
 void breadthFirstSolve(); //genuine suffering
@@ -51,6 +52,24 @@ int mazeMap[9][9] = {
         {0, 0, -1, 0, 0, 0, 0, 0, -1},
         {-1, -1, -1, -1, -1, -1, -1, -1, -1}
 };
+
+void drawExample(int startCellX, int startCellY, int goalCellX, int goalCellY)
+{
+	int x1 = 8;
+	int y1 = 1;
+	int x2 = 0;
+	int y2 = 1;
+	int x3 = 6;
+	int y3 = 7;
+	int x4 = 0;
+	int y4 = 7;
+	moveToCell(x1,y1,x2,y2);
+	wait1Msec(300);
+	//moveToCell(x2,y2,x3,y3);
+	//wait1Msec(300);
+	//moveToCell(x3,y3,x4,y4);
+	//wait1Msec(300);
+}
 string penDirection[MAZE_R*MAZE_C];
 
 //start is [1][0], end is [MAZE_R - 1][MAZE_C]
@@ -63,39 +82,39 @@ task main()
 	time1[T1]=0;
 	//currentCellX=8;
 	//currentCellY=8;
-	//penUp();
-
+	// penUp();
 	readMaze();
-	//for(int i=2; i<MAZE_R+2;i++)
-	//{
-	//	displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
-	//}
-	//wait1Msec(5000);
+	for(int i=2; i<MAZE_R+2;i++)
+	{
+		displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	}
+	wait1Msec(5000);
+	swapToPen();
+	penDown();
+	drawExample(startCellX,startCellY,goalCellX,goalCellY);
+	penUp();
+	wait1Msec(5000);
 	//int maze_time=time1[T1];
 	////start timer
 	//eraseDisplay();
- // handrailLAlgo(startCellX, startCellY);
- // for(int i=2; i<MAZE_R+2;i++)
-	//{
-	//	displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
-	//}
-	//wait1Msec(5000);
+  handrailLAlgo(startCellX, startCellY);
+  for(int i=2; i<MAZE_R+2;i++)
+	{
+		displayString(i, "%d %d %d %d %d %d %d %d %d", mazeMap[i-2][0],mazeMap[i-2][1],mazeMap[i-2][2],mazeMap[i-2][3],mazeMap[i-2][4],mazeMap[i-2][5],mazeMap[i-2][6],mazeMap[i-2][7],mazeMap[i-2][8]);
+	}
+	wait1Msec(5000);
 	//int algo_time=time1[T1]-maze_time;
 	//draw maze
-	motor[motorA] = motor[motorB] = MOTOR_POWER;
-	wait1Msec(2000);
-	motor[motorC] = MOTOR_POWER_Y;
-	wait1Msec(2000);
-	displayString(1, "movetocell");
-	wait1Msec(5000);
-	moveToCell(currentCellX, currentCellY, 0, 1);
-	displayString(2, "after movetocell");
-	wait1Msec(5000);
-	displayString(3, "swap");
-	wait1Msec(5000);
-	swapToPen();
-	displayString(4, "after swap");
-	wait1Msec(5000);
+	//displayString(1, "movetocell");
+	//wait1Msec(5000);
+	// moveToCell(currentCellX, currentCellY, 0, 1);
+	//displayString(2, "after movetocell");
+	//wait1Msec(5000);
+	//displayString(3, "swap");
+	//wait1Msec(5000);
+	//swapToPen();
+	//// displayString(4, "after swap");
+	//wait1Msec(5000);
 	drawMaze(currentCellX, currentCellY, facingDir, startCellX, startCellY, goalCellX, goalCellY);
 	penUp();
 	int total_time=time1[T1];
@@ -182,19 +201,18 @@ void readMaze()
     return;
 }
 
-//X-axis is motorA + motorB, Y-axis is motorC, pen is motorD
 void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCellY) //needs to be checked
 {
     //move the x distance
     if (currentCellX > nextCellX)
     {
-    	motor[motorA] = motor[motorB] = -MOTOR_POWER; //test to make sure directions are right
+    	motor[motorA] = motor[motorB] = MOTOR_POWER; //test to make sure directions are right
         while(nMotorEncoder[motorA] > nextCellX*3.54*CELL_TO_ENCODER)
         {}
     }
     else if (currentCellX < nextCellX)
     {
-    	motor[motorA] = motor[motorB] = MOTOR_POWER;
+    	motor[motorA] = motor[motorB] = -MOTOR_POWER;
         while(nMotorEncoder[motorA] < nextCellX*3.54*CELL_TO_ENCODER)
         {}
     }
@@ -202,15 +220,15 @@ void moveToCell(int &currentCellX, int &currentCellY, int nextCellX, int nextCel
     //move the y distance
     if (currentCellY > nextCellY)
     {
-    	motor[motorC] = -MOTOR_POWER_Y;
+    	motor[motorC] = MOTOR_POWER_Y;
         while(nMotorEncoder[motorC] > nextCellY*137*CELL_TO_ENCODER)
         {}
     }
     else if (currentCellY < nextCellY)
     {
-    	motor[motorC] = MOTOR_POWER_Y;
+    	motor[motorC] = -MOTOR_POWER_Y;
         while(nMotorEncoder[motorC] < nextCellY*137*CELL_TO_ENCODER)
-        {displayString(7, "encoder: %d", nMotorEncoder[motorC]);}
+        {}
     }
     motor[motorC] = 0;
     //update the current cell coordinate
@@ -249,22 +267,22 @@ int cursorCellX = 0, cursorCellY = 0;
 
     //search mazeMap for start and end points
     bool top_left = searchEnds();
-    if(top_left)
+    if(!top_left)
     {
-        startCellX = 1;
-        startCellY = 0;
+        startCellX = MAZE_C-1;
+        startCellY = 1;
         // mazeMap[startCellY][startCellX] = 1;
-        goalCellX = MAZE_C-2;
-        goalCellY = MAZE_R-1;
+        goalCellX = 0;
+        goalCellY = MAZE_R-2;
         mazeMap[goalCellY][goalCellX]=0;
     }
     else
     {
-        startCellX= 0;
-        startCellY=MAZE_R-2;
+        startCellX = 1;
+        startCellY = 0;
         // mazeMap[startCellY][startCellX] = 1;
-        goalCellX=MAZE_C-1;
-        goalCellY=1;
+        goalCellX=MAZE_C-2;
+        goalCellY=MAZE_R-1;
         mazeMap[goalCellY][goalCellX]=0;
     }
 
